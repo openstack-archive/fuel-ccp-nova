@@ -1,0 +1,12 @@
+configs:
+    nova_db_password: password
+    nova_db_name: nova
+    nova_api_db_name: nova-api
+    nova_db_username: nova
+    nova_api_port: 8774
+    nova_metadata_port: "8775"
+    nova_novncproxy_port: "6080"
+    nova_logging_debug: "false"
+    enable_ceph: "false"
+    metadata_secret: "password"
+    nova_console: "novnc"

@@ -1,0 +1,8 @@
+FROM {{ namespace }}/{{ image_prefix }}nova-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN apt-get install -y --no-install-recommends \
+        mysql-client \
+    && apt-get clean
+
+USER nova

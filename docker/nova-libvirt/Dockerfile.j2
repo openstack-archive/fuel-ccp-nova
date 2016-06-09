@@ -1,0 +1,17 @@
+FROM {{ namespace }}/{{ image_prefix }}nova-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN apt-get -y install --no-install-recommends \
+        ceph-common \
+        libvirt-bin \
+        dmidecode \
+        pm-utils \
+        qemu \
+        qemu-block-extra \
+        ebtables \
+        xen-utils-4.4 \
+        usermode \
+    && apt-get clean \
+    && mkdir -p /etc/ceph \
+    && rm -f /etc/libvirt/qemu/networks/default.xml /etc/libvirt/qemu/networks/autostart/default.xml \
+    && usermod -a -G libvirt nova

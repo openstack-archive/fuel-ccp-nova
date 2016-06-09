@@ -1,0 +1,43 @@
+service:
+    name: nova-compute
+    container:
+        host-net: "true"
+        privileged: "true"
+        daemonset: "true"
+        node-selector:
+          openstack-compute: "true"
+    probes:
+        readiness: "true"
+        liveness: "true"
+    volumes:
+      - name: run
+        type: host
+        path: /run
+      - name: modules
+        type: host
+        path: /lib/modules
+      - name: nova
+        type: host
+        path: /var/lib/nova
+      - name: libvirt
+        type: host
+        path: /var/lib/libvirt
+    pre:
+        - name: disable-netfilter-4
+          command: "echo sudo sysctl net.bridge.bridge-nf-call-iptables=1"
+        - name: disable-netfilter-6
+          command: "echo sudo sysctl net.bridge.bridge-nf-call-ip6tables=1"
+        - name: create-dir
+          command: "sudo /bin/chown -R nova: /var/lib/nova ; mkdir -p /var/lib/nova/instances"
+    daemon:
+        command: nova-compute --config-file /etc/nova/nova.conf
+        dependencies:
+          - nova-db-migrations
+          - nova-libvirt
+        files:
+          - nova.conf
+files:
+    nova.conf:
+        path: /etc/nova/nova.conf
+        content: nova.conf.j2
+        perm: "0600"

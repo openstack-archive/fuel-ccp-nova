@@ -1,0 +1,20 @@
+FROM {{ namespace }}/{{ image_prefix }}nova-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN apt-get -y install --no-install-recommends \
+        libvirt-dev \
+        qemu-utils \
+        ceph-common \
+        genisoimage \
+        open-iscsi \
+    && apt-get clean \
+    && mkdir -p /etc/ceph
+
+RUN git clone https://github.com/openstack/requirements.git && \
+    /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt libvirt-python rtslib-fb && \
+    rm -rf requirements && \
+    rm -f /etc/machine-id
+
+ENV PATH $PATH:/lib/udev
+
+USER nova

@@ -1,0 +1,11 @@
+FROM {{ namespace }}/{{ image_prefix }}nova-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN curl -o nova-novncproxy.tar.gz https://codeload.github.com/kanaka/noVNC/legacy.tar.gz/v0.5.1 && \
+   tar -zxvf nova-novncproxy.tar.gz && \
+   mkdir -p /usr/share/novnc && \
+   cp -rp kanaka*/* /usr/share/novnc/ && \
+   chown -R nova: /usr/share/novnc && \
+   rm -rf nova-novncproxy.tar.gz kanaka*
+
+USER nova
