@@ -1,31 +1,33 @@
 service:
-    name: nova-libvirt
-    container:
-        host-net: "true"
-        privileged: "true"
-        daemonset: "true"
-        node-selector:
-          openstack-compute: "true"
-    probes:
+  name: nova-libvirt
+  host-net: true
+  daemonset: true
+  node-selector:
+    openstack-compute: "true"
+  containers:
+    - name: nova-libvirt
+      image: nova-libvirt
+      privileged: true
+      probes:
         readiness: "true"
         liveness: "true"
-    volumes:
-      - name: run
-        type: host
-        path: /run
-      - name: modules
-        type: host
-        path: /lib/modules
-      - name: nova
-        type: host
-        path: /var/lib/nova
-      - name: libvirt
-        type: host
-        path: /var/lib/libvirt
-    pre:
+      volumes:
+        - name: run
+          type: host
+          path: /run
+        - name: modules
+          type: host
+          path: /lib/modules
+        - name: nova
+          type: host
+          path: /var/lib/nova
+        - name: libvirt
+          type: host
+          path: /var/lib/libvirt
+      pre:
         - name: nova-libvirt-bootstrap
           command: /tmp/nova-libvirt-bootstrap.sh
-    daemon:
+      daemon:
         command: libvirtd --listen
         dependencies:
           - nova-db-migrations
@@ -33,11 +35,11 @@ service:
           - libvirtd.conf
           - nova-libvirt-bootstrap.sh
 files:
-    libvirtd.conf:
-        path: /etc/libvirt/libvirtd.conf
-        content: libvirtd.conf.j2
-        perm: "0600"
-    nova-libvirt-bootstrap.sh:
-        path: /tmp/nova-libvirt-bootstrap.sh
-        content: nova-libvirt-bootstrap.sh
-        perm: "0755"
+  libvirtd.conf:
+    path: /etc/libvirt/libvirtd.conf
+    content: libvirtd.conf.j2
+    perm: "0600"
+  nova-libvirt-bootstrap.sh:
+    path: /tmp/nova-libvirt-bootstrap.sh
+    content: nova-libvirt-bootstrap.sh
+    perm: "0755"

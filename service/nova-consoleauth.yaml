@@ -1,20 +1,22 @@
 service:
-    name: nova-consoleauth
-    container:
-        host-net: "true"
-        node-selector:
-          openstack-controller: "true"
-    probes:
+  name: nova-consoleauth
+  host-net: true
+  node-selector:
+    openstack-controller: "true"
+  containers:
+    - name: nova-consoleauth
+      image: nova-consoleauth
+      probes:
         readiness: "true"
         liveness: "true"
-    daemon:
+      daemon:
         command: nova-consoleauth --config-file /etc/nova/nova.conf
         files:
-            - nova.conf
+          - nova.conf
         dependencies:
-            - nova-db-migrations
+          - nova-db-migrations
 files:
-    nova.conf:
-        path: /etc/nova/nova.conf
-        content: nova.conf.j2
-        perm: "0600"
+  nova.conf:
+    path: /etc/nova/nova.conf
+    content: nova.conf.j2
+    perm: "0600"

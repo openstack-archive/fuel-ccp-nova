@@ -1,60 +1,62 @@
 service:
-    name: nova-api
-    ports:
-        - nova_api_port
-        - nova_metadata_port
-    container:
-        privileged: "true"
-        node-selector:
-          openstack-controller: "true"
-    probes:
+  name: nova-api
+  ports:
+    - nova_api_port
+    - nova_metadata_port
+  node-selector:
+    openstack-controller: "true"
+  containers:
+    - name: nova-api
+      image: nova-api
+      privileged: true
+      probes:
         readiness: "true"
         liveness: "true"
-    pre:
+      pre:
         - name: nova-db-creation
           type: single
           command: /tmp/nova-api-db-create.sh
           dependencies:
-              - mariadb
-              - keystone-create-project
+            - mariadb
+            - keystone-create-project
           files:
-              - nova-api-db-create.sh
-              - nova.conf
+            - nova-api-db-create.sh
+            - nova.conf
 
         - name: nova-db-sync
           type: single
           command: nova-manage db sync
           dependencies:
-              - nova-db-creation
+            - nova-db-creation
           files:
-              - nova.conf
+            - nova.conf
 
         - name: nova-api-db-sync
           type: single
           command: nova-manage api_db sync
           dependencies:
-              - nova-db-sync
+            - nova-db-sync
           files:
-              - nova.conf
+            - nova.conf
 
         - name: nova-db-migrations
           type: single
           command: nova-manage db online_data_migrations
           dependencies:
-              - nova-api-db-sync
+            - nova-api-db-sync
           files:
-              - nova.conf
+            - nova.conf
 
-    daemon:
+      daemon:
         command: nova-api --config-file /etc/nova/nova.conf
         files:
-            - nova.conf
+          - nova.conf
 files:
-    nova.conf:
-        path: /etc/nova/nova.conf
-        content: nova.conf.j2
-        perm: "0600"
-    nova-api-db-create.sh:
-        path: /tmp/nova-api-db-create.sh
-        content: nova-api-db-create.sh.j2
-        perm: "0755"
+  nova.conf:
+    path: /etc/nova/nova.conf
+    content: nova.conf.j2
+    perm: "0600"
+  nova-api-db-create.sh:
+    path: /tmp/nova-api-db-create.sh
+    content: nova-api-db-create.sh.j2
+    perm: "0755"

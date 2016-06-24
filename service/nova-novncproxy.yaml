@@ -1,21 +1,23 @@
 service:
-    name: nova-novncproxy
-    ports:
-        - nova_novncproxy_port
-    container:
-        node-selector:
-          openstack-controller: "true"
-    probes:
+  name: nova-novncproxy
+  ports:
+    - nova_novncproxy_port
+  node-selector:
+    openstack-controller: "true"
+  containers:
+    - name: nova-novncproxy
+      image: nova-novncproxy
+      probes:
         readiness: "true"
         liveness: "true"
-    daemon:
+      daemon:
         command: nova-novncproxy --config-file /etc/nova/nova.conf
         files:
-            - nova.conf
+          - nova.conf
         dependencies:
-            - nova-db-migrations
+          - nova-db-migrations
 files:
-    nova.conf:
-        path: /etc/nova/nova.conf
-        content: nova.conf.j2
-        perm: "0600"
+  nova.conf:
+    path: /etc/nova/nova.conf
+    content: nova.conf.j2
+    perm: "0600"
