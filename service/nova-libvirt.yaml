@@ -32,6 +32,7 @@ service:
         files:
           - libvirtd.conf
           - nova-libvirt-bootstrap.sh
+          - qemu.conf
 files:
   libvirtd.conf:
     path: /etc/libvirt/libvirtd.conf
@@ -41,3 +42,7 @@ files:
     path: /tmp/nova-libvirt-bootstrap.sh
     content: nova-libvirt-bootstrap.sh
     perm: "0755"
+  qemu.conf:
+    path: /etc/libvirt/qemu.conf
+    content: qemu.conf.j2
+    perm: "0600"
