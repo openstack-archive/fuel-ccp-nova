@@ -13,24 +13,24 @@ service:
         readiness: "true"
         liveness: "true"
       pre:
-        - name: nova-db-creation
+        - name: nova-db-create
           type: single
-          command: /tmp/nova-api-db-create.sh
+          command: mysql -v -u root -p{{ db_root_password }} -h mariadb -e
+                   'create database `{{ nova_db_name }}`;
+                   create database `{{ nova_api_db_name }}`;
+                   grant all privileges on `{{ nova_db_name }}`.* to "{{ nova_db_username }}"@"%" identified by "{{ nova_db_password }}";
+                   grant all privileges on `{{ nova_api_db_name }}`.* to "{{ nova_db_username }}"@"%" identified by "{{ nova_db_password }}"'
           dependencies:
             - mariadb
-            - keystone-create-project
           files:
-            - nova-api-db-create.sh
             - nova.conf
-
         - name: nova-db-sync
           type: single
           command: nova-manage db sync
           dependencies:
-            - nova-db-creation
+            - nova-db-create
           files:
             - nova.conf
-
         - name: nova-api-db-sync
           type: single
           command: nova-manage api_db sync
@@ -38,7 +38,6 @@ service:
             - nova-db-sync
           files:
             - nova.conf
-
         - name: nova-db-migrations
           type: single
           command: nova-manage db online_data_migrations
@@ -46,7 +45,36 @@ service:
             - nova-api-db-sync
           files:
             - nova.conf
-
+        - name: nova-user-create
+          type: single
+          command: openstack user create --project service --password {{ nova_db_password }} {{ nova_db_username }}
+          dependencies:
+            - keystone-create-project
+        - name: nova-role-add
+          dependencies:
+            - nova-user-create
+          type: single
+          command: openstack role add --project service --user {{ nova_db_username }} admin
+        - name: nova-service-create
+          dependencies:
+            - keystone
+          type: single
+          command: openstack service create --name nova --description "OpenStack Compute" compute
+        - name: nova-public-endpoint-create
+          dependencies:
+            - nova-service-create
+          type: single
+          command: openstack endpoint create --region RegionOne compute public http://nova-api:{{ nova_api_port }}/v2/%\(tenant_id\)s
+        - name: nova-internal-endpoint-create
+          dependencies:
+            - nova-service-create
+          type: single
+          command: openstack endpoint create --region RegionOne compute internal http://nova-api:{{ nova_api_port }}/v2/%\(tenant_id\)s
+        - name: nova-admin-endpoint-create
+          dependencies:
+            - nova-service-create
+          type: single
+          command: openstack endpoint create --region RegionOne compute admin http://nova-api:{{ nova_api_port }}/v2/%\(tenant_id\)s
       daemon:
         command: nova-api --config-file /etc/nova/nova.conf
         files:
@@ -56,7 +84,3 @@ files:
     path: /etc/nova/nova.conf
     content: nova.conf.j2
     perm: "0600"
-  nova-api-db-create.sh:
-    path: /tmp/nova-api-db-create.sh
-    content: nova-api-db-create.sh.j2
-    perm: "0755"
