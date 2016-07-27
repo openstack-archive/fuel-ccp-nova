@@ -5,7 +5,6 @@ RUN curl -o nova-{{ branch }}.tar.gz http://tarballs.openstack.org/nova/nova-{{ 
     && tar -zxvf nova-{{ branch }}.tar.gz
 
 RUN apt-get install -y --no-install-recommends \
-        python-nova \
         bridge-utils \
         openvswitch-switch \
         iptables \
