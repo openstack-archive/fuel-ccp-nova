@@ -2,7 +2,6 @@ FROM {{ namespace }}/openstack-base:{{ tag }}
 MAINTAINER {{ maintainer }}
 
 RUN apt-get install -y --no-install-recommends \
-        python-nova \
         bridge-utils \
         openvswitch-switch \
         iptables \
