@@ -2,8 +2,6 @@ service:
   name: nova-compute
   host-net: true
   daemonset: true
-  node-selector:
-    openstack-compute: "true"
   containers:
     - name: nova-compute
       image: nova-compute

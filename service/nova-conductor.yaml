@@ -1,8 +1,6 @@
 service:
   name: nova-conductor
   host-net: true
-  node-selector:
-    openstack-controller: "true"
   containers:
     - name: nova-conductor
       image: nova-conductor

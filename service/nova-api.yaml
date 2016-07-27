@@ -3,8 +3,6 @@ service:
   ports:
     - nova_api_port
     - nova_metadata_port
-  node-selector:
-    openstack-controller: "true"
   containers:
     - name: nova-api
       image: nova-api

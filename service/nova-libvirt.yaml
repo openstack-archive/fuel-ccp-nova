@@ -2,8 +2,6 @@ service:
   name: nova-libvirt
   host-net: true
   daemonset: true
-  node-selector:
-    openstack-compute: "true"
   containers:
     - name: nova-libvirt
       image: nova-libvirt
