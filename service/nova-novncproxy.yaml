@@ -2,8 +2,6 @@ service:
   name: nova-novncproxy
   ports:
     - nova_novncproxy_port
-  node-selector:
-    openstack-controller: "true"
   containers:
     - name: nova-novncproxy
       image: nova-novncproxy

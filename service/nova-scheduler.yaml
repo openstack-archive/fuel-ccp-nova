@@ -1,8 +1,6 @@
 service:
   name: nova-scheduler
   host-net: true
-  node-selector:
-    openstack-controller: "true"
   containers:
     - name: nova-scheduler
       image: nova-scheduler
