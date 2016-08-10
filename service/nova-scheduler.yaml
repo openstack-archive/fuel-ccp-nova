@@ -1,6 +1,5 @@
 service:
   name: nova-scheduler
-  host-net: true
   containers:
     - name: nova-scheduler
       image: nova-scheduler

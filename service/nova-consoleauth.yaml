@@ -1,6 +1,5 @@
 service:
   name: nova-consoleauth
-  host-net: true
   containers:
     - name: nova-consoleauth
       image: nova-consoleauth

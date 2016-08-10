@@ -1,6 +1,5 @@
 service:
   name: nova-conductor
-  host-net: true
   containers:
     - name: nova-conductor
       image: nova-conductor
