@@ -1,4 +1,4 @@
-FROM {{ namespace }}/{{ image_prefix }}nova-base:{{ tag }}
+FROM {{ namespace }}/nova-base:{{ tag }}
 MAINTAINER {{ maintainer }}
 
 RUN curl -o nova-novncproxy.tar.gz https://codeload.github.com/kanaka/noVNC/legacy.tar.gz/v0.5.1 && \
