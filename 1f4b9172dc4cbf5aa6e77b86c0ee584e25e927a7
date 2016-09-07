@@ -1,0 +1,9 @@
+Code-Review+2: Eric Lemoine <elemoine@mirantis.com>
+Code-Review+2: Proskurin Kirill <kproskurin@mirantis.com>
+Workflow+1: Proskurin Kirill <kproskurin@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 07 Sep 2016 08:15:55 +0000
+Reviewed-on: https://review.openstack.org/347831
+Project: openstack/fuel-ccp-nova
+Branch: refs/heads/master
