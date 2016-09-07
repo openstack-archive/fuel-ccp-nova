@@ -6,11 +6,10 @@ RUN apt-get -y install --no-install-recommends \
         libvirt-bin \
         dmidecode \
         pm-utils \
-        qemu \
+        qemu-kvm \
         qemu-block-extra \
         ebtables \
         xen-utils-4.4 \
-        usermode \
     && apt-get clean \
     && mkdir -p /etc/ceph \
     && rm -f /etc/libvirt/qemu/networks/default.xml /etc/libvirt/qemu/networks/autostart/default.xml \
