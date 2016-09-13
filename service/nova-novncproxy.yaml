@@ -1,7 +1,7 @@
 service:
   name: nova-novncproxy
   ports:
-    - nova_novncproxy_port
+    - {{ nova_novncproxy_port }}
   containers:
     - name: nova-novncproxy
       image: nova-novncproxy

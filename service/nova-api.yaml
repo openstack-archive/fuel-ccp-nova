@@ -1,8 +1,8 @@
 service:
   name: nova-api
   ports:
-    - nova_api_port
-    - nova_metadata_port
+    - {{ nova_api_port }}
+    - {{ nova_metadata_port }}
   containers:
     - name: nova-api
       image: nova-api
