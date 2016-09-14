@@ -14,7 +14,7 @@ RUN apt-get install -y --no-install-recommends \
 
 RUN useradd --user-group --create-home --home-dir /var/lib/nova nova \
     && chmod 755 /var/lib/nova \
-    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c nova/requirements.txt /nova \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c nova/requirements.txt /nova python-memcached \
     && mkdir -p /etc/nova /var/lib/nova /var/log/nova \
     && cp -r /nova/etc/nova/* /etc/nova/ \
     && chown -R nova: /etc/nova /var/lib/nova /var/log/nova \
