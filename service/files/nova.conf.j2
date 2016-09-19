@@ -62,7 +62,7 @@ vncserver_proxyclient_address = {{ network_topology["private"]["address"] }}
 # FIXME
 {# if service_name == "nova-compute" #}
 #FIXME
-novncproxy_base_url = http://nova-novncproxy:{{ nova_novncproxy_port }}/vnc_auto.html
+novncproxy_base_url = http://nova-novncproxy:{{ nova_novncproxy_nodeport }}/vnc_auto.html
 {# endif #}
 {% elif nova_console == 'spice' %}
 [vnc]
