@@ -45,7 +45,7 @@ compute_driver = libvirt.LibvirtDriver
 
 # Here we need to pass an array of memcached daemons, for now we just use DNS
 # FIXME
-memcached_servers = memcached
+memcached_servers = memcached.{{ namespace }}
 
 
 # Though my_ip is not used directly, lots of other variables use $my_ip
@@ -62,7 +62,7 @@ vncserver_proxyclient_address = {{ network_topology["private"]["address"] }}
 # FIXME
 {# if service_name == "nova-compute" #}
 #FIXME
-novncproxy_base_url = http://nova-novncproxy:{{ nova_novncproxy_port }}/vnc_auto.html
+novncproxy_base_url = http://nova-novncproxy.{{ namespace }}:{{ nova_novncproxy_port }}/vnc_auto.html
 {# endif #}
 {% elif nova_console == 'spice' %}
 [vnc]
@@ -72,7 +72,7 @@ enabled = false
 server_listen = {{ network_topology["private"]["address"] }}
 server_proxyclient_address = {{ nova_spicehtml5proxy_host }}
 {% if service_name == "nova-compute" %}
-html5proxy_base_url = http://{{ nova_spicehtml5proxy_host }}:{{ nova_spicehtml5proxy_port }}/spice_auto.html
+html5proxy_base_url = http://{{ nova_spicehtml5proxy_host }}.{{ namespace }}:{{ nova_spicehtml5proxy_port }}/spice_auto.html
 {% endif %}
 html5proxy_host = {{ nova_spicehtml5proxy_host }}
 html5proxy_port = {{ nova_spicehtml5proxy_port }}
@@ -86,7 +86,7 @@ admin_username = {{ ironic_keystone_user }}
 admin_password = {{ ironic_keystone_password }}
 admin_url = {{ openstack_auth_url }}
 admin_tenant_name = service
-api_endpoint = http://ironic-api:{{ ironic_api_port }}/v1
+api_endpoint = http://ironic-api.{{ namespace }}:{{ ironic_api_port }}/v1
 {% endif %}
 
 [oslo_messaging_rabbit]
@@ -95,14 +95,14 @@ rabbit_password = {{ rabbitmq_password }}
 rabbit_ha_queues = true
 # We need to pass an array of RBMQ server here
 # FIXME
-rabbit_hosts = rabbitmq
+rabbit_hosts = rabbitmq.{{ namespace }}
 
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 
 [glance]
 # FIXME
-api_servers = glance-api:{{ glance_api_port }}
+api_servers = glance-api.{{ namespace }}:{{ glance_api_port }}
 # We need to do N number of retries here, N = number of glance-api daemons running
 # FIXME
 num_retries = 1
@@ -111,12 +111,12 @@ num_retries = 1
 catalog_info = volume:cinder:internalURL
 
 [neutron]
-url = http://neutron-server:{{ neutron_server_port }}
+url = http://neutron-server.{{ namespace }}:{{ neutron_server_port }}
 auth_strategy = keystone
 metadata_proxy_shared_secret = {{ metadata_secret }}
 service_metadata_proxy = true
 
-auth_url = http://keystone:{{ keystone_admin_port }}
+auth_url = http://keystone.{{ namespace }}:{{ keystone_admin_port }}
 auth_plugin = password
 project_domain_name = default
 user_domain_id = default
@@ -125,32 +125,32 @@ username = {{ neutron_db_username }}
 password = {{ neutron_db_password }}
 
 [database]
-connection = mysql+pymysql://{{ nova_db_username }}:{{ nova_db_password }}@mariadb/{{ nova_db_name }}
+connection = mysql+pymysql://{{ nova_db_username }}:{{ nova_db_password }}@mariadb.{{ namespace }}/{{ nova_db_name }}
 max_pool_size = 50
 max_overflow = 1000
 max_retries = -1
 
 [api_database]
-connection = mysql+pymysql://{{ nova_db_username }}:{{ nova_db_password }}@mariadb/{{ nova_api_db_name }}
+connection = mysql+pymysql://{{ nova_db_username }}:{{ nova_db_password }}@mariadb.{{ namespace }}/{{ nova_api_db_name }}
 max_retries = -1
 
 [cache]
 backend = oslo_cache.memcache_pool
 enabled = True
 # FIXME
-memcache_servers = memcached
+memcache_servers = memcached.{{ namespace }}
 
 [keystone_authtoken]
 auth_version = v3
-auth_uri = http://keystone:{{ keystone_public_port }}/v3
-auth_url = http://keystone:{{ keystone_admin_port }}/v3
+auth_uri = http://keystone.{{ namespace }}:{{ keystone_public_port }}/v3
+auth_url = http://keystone.{{ namespace }}:{{ keystone_admin_port }}/v3
 auth_plugin = password
 project_domain_id = default
 user_domain_id = default
 project_name = service
 username = {{ nova_db_username }}
 password = {{ nova_db_password }}
-memcached_servers = memcached:{{ memcached_port }}
+memcached_servers = memcached.{{ namespace }}:{{ memcached_port }}
 
 [libvirt]
 #Need to split file in sections to avoid confussion with wrong IP here for non compute services
