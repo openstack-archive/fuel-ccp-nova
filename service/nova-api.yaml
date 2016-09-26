@@ -78,8 +78,20 @@ service:
         command: nova-api --config-file /etc/nova/nova.conf
         files:
           - nova.conf
+      post:
+        - name: nova-create-default-flavors
+          type: single
+          command: /opt/ccp/bin/create-default-flavors.sh
+          files:
+            - create-default-flavors.sh
+
 files:
   nova.conf:
     path: /etc/nova/nova.conf
     content: nova.conf.j2
     perm: "0600"
+
+  create-default-flavors.sh:
+    path: /opt/ccp/bin/create-default-flavors.sh.j2
+    content: create-default-flavors.sh
+    perm: "0700"
