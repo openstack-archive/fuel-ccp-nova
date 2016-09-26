@@ -31,11 +31,11 @@ linuxnet_interface_driver = nova.network.linux_net.BridgeInterfaceDriver
 
 allow_resize_to_same_host = true
 
-{% if enable_ironic | bool %}
+{% if enable_ironic %}
 scheduler_host_manager = nova.scheduler.ironic_host_manager.IronicHostManager
 {% endif %}
 
-{% if enable_nova_fake | bool %}
+{% if enable_nova_fake %}
 scheduler_default_filters = RetryFilter,AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter
 host = {{ get_hostname() }}_{{ item }}
 compute_driver = fake.FakeDriver
@@ -155,7 +155,7 @@ memcached_servers = memcached:{{ memcached_port }}
 [libvirt]
 #Need to split file in sections to avoid confussion with wrong IP here for non compute services
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
-{% if enable_ceph | bool %}
+{% if enable_ceph %}
 images_type = rbd
 images_rbd_pool = {{ ceph_nova_pool_name }}
 images_rbd_ceph_conf = /etc/ceph/ceph.conf
