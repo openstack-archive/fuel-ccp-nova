@@ -3,6 +3,8 @@ MAINTAINER {{ maintainer }}
 
 RUN apt-get -y install --no-install-recommends \
         ceph-common \
+        python-ceph \
+        python-rados \
         libvirt-bin \
         dmidecode \
         pm-utils \
@@ -13,4 +15,8 @@ RUN apt-get -y install --no-install-recommends \
     && apt-get clean \
     && mkdir -p /etc/ceph \
     && rm -f /etc/libvirt/qemu/networks/default.xml /etc/libvirt/qemu/networks/autostart/default.xml \
-    && usermod -a -G libvirt nova
+    && usermod -a -G libvirt nova \
+    && ln -s /usr/lib/python2.7/dist-packages/rados.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados.so \
+    && ln -s /usr/lib/python2.7/dist-packages/rados-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados-0.egg-info \
+    && ln -s /usr/lib/python2.7/dist-packages/rbd-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd-0.egg-info \
+    && ln -s /usr/lib/python2.7/dist-packages/rbd.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd.so

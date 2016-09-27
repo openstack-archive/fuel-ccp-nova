@@ -36,8 +36,19 @@ service:
           - nova-libvirt:local
         files:
           - nova.conf
+          # {% if nova.ceph.enable %}
+          - ceph-conf
+          - nova-ceph-key
+          # {% endif %}
+
 files:
   nova.conf:
     path: /etc/nova/nova.conf
     content: nova.conf.j2
     perm: "0600"
+  ceph-conf:
+    path: /etc/ceph/ceph.conf
+    content: ceph.conf.j2
+  nova-ceph-key:
+    path: /etc/ceph/ceph.client.cinder.keyring
+    content: ceph.client.cinder.keyring.j2

@@ -6,10 +6,17 @@ RUN apt-get -y install --no-install-recommends \
         python-libvirt \
         qemu-utils \
         ceph-common \
+        python-ceph \
+        python-rados \
         genisoimage \
         open-iscsi \
     && apt-get clean \
-    && mkdir -p /etc/ceph
+    && mkdir -p /etc/ceph \
+    && chown -R nova: /etc/ceph \
+    && ln -s /usr/lib/python2.7/dist-packages/rados.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados.so \
+    && ln -s /usr/lib/python2.7/dist-packages/rados-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados-0.egg-info \
+    && ln -s /usr/lib/python2.7/dist-packages/rbd-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd-0.egg-info \
+    && ln -s /usr/lib/python2.7/dist-packages/rbd.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd.so
 
 RUN /var/lib/microservices/venv/bin/pip install --upgrade libvirt-python rtslib-fb && \
     rm -rf requirements && \
