@@ -1,0 +1,8 @@
+[global]
+fsid = {{ ceph.fsid }}
+mon_initial_members = {{ ceph.initial_members }}
+mon_host = {{ ceph.mon_host }}
+auth_cluster_required = cephx
+auth_service_required = cephx
+auth_client_required = cephx
+

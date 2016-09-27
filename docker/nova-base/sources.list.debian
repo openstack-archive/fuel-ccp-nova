@@ -1,0 +1,2 @@
+# main mirror "download.ceph.com" is down, so we're using the eu one
+deb http://eu.ceph.com/debian-jewel jessie main
