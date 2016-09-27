@@ -26,6 +26,9 @@ allow_resize_to_same_host = true
 
 compute_driver = libvirt.LibvirtDriver
 
+# ironic requires different host manager, this not affects regular instances
+scheduler_host_manager = ironic_host_manager
+
 force_config_drive = True
 # vfat format doesn't require sending config drive over scp (like in case
 # of default iso format)
