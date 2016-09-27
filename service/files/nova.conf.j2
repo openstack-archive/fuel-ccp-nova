@@ -155,12 +155,12 @@ memcached_servers = {{ address('memcached') }}:{{ memcached_port }}
 [libvirt]
 #Need to split file in sections to avoid confussion with wrong IP here for non compute services
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
-{% if enable_ceph %}
+{% if nova_enable_ceph %}
 images_type = rbd
-images_rbd_pool = {{ ceph_nova_pool_name }}
+images_rbd_pool = {{ nova_ceph_pool_name }}
 images_rbd_ceph_conf = /etc/ceph/ceph.conf
-rbd_user = nova
-rbd_secret_uuid = {{ rbd_secret_uuid }}
+rbd_user = {{ nova_ceph_username }}
+rbd_secret_uuid = {{ nova_rbd_secret_uuid }}
 disk_cachemodes="network=writeback"
 live_migration_flag="VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED"
 hw_disk_discard = unmap
