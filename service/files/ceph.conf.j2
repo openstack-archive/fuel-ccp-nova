@@ -1,0 +1,8 @@
+[global]
+fsid = {{ cinder_ceph_fsid }}
+mon_initial_members = {{ cinder_ceph_initial_members }}
+mon_host = {{ cinder_ceph_mon_host }}
+auth_cluster_required = cephx
+auth_service_required = cephx
+auth_client_required = cephx
+
