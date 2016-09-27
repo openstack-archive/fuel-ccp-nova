@@ -24,12 +24,24 @@ linuxnet_interface_driver = nova.network.linux_net.BridgeInterfaceDriver
 
 allow_resize_to_same_host = true
 
-compute_driver = libvirt.LibvirtDriver
+# ironic requires different host manager, this not affects regular instances
+scheduler_host_manager = ironic_host_manager
 
 force_config_drive = True
+
+{% if role_name == "nova-compute-ironic" %}
+host = {{ node_name }}
+compute_driver = ironic.IronicDriver
+ram_allocation_ratio=1.0
+reserved_host_memory_mb=0
+# ironic is not working with vfat
+config_drive_format = iso9660
+{% else %}
+compute_driver = libvirt.LibvirtDriver
 # vfat format doesn't require sending config drive over scp (like in case
 # of default iso format)
 config_drive_format = vfat
+{% endif %}
 
 # allocation ratio params
 cpu_allocation_ratio = {{ nova.allocation_ratio.cpu }}
@@ -60,12 +72,15 @@ html5proxy_port = {{ nova.spicehtml5proxy.port.cont }}
 
 {% if role_name == "nova-compute-ironic" %}
 [ironic]
-#(TODO) remember to update this once discoverd is replaced by inspector
-admin_username = {{ ironic_keystone_user }}
-admin_password = {{ ironic_keystone_password }}
-admin_url = {{ openstack_auth_url }}
-admin_tenant_name = service
-api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
+api_endpoint = {{ address('ironic-api', ironic.api_port, with_scheme=True) }}/v1
+auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}
+auth_strategy = keystone
+auth_plugin = password
+project_domain_name = default
+user_domain_id = default
+project_name = service
+username = {{ ironic.username }}
+password = {{ ironic.password }}
 {% endif %}
 
 [oslo_messaging_notifications]
