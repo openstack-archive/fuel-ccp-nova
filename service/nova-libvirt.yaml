@@ -33,6 +33,16 @@ service:
           - libvirtd.conf
           - nova-libvirt-bootstrap.sh
           - qemu.conf
+          # {% if ceph.nova_enable %}
+          - rbd-secret
+          - ceph-conf
+          - nova-ceph-key
+          - ceph-libvirt-secret-config.sh
+      post:
+        - name: nova-libvirt-secret-set
+          command: /opt/ccp/bin/ceph-libvirt-secret-config.sh
+          # {% endif %}
+
 files:
   libvirtd.conf:
     path: /etc/libvirt/libvirtd.conf
@@ -46,3 +56,17 @@ files:
     path: /etc/libvirt/qemu.conf
     content: qemu.conf.j2
     perm: "0600"
+  rbd-secret:
+    path: /etc/libvirt/secrets/secret.xml
+    content: rbd_secret.xml.j2
+    perm: "0600"
+  ceph-conf:
+    path: /etc/ceph/ceph.conf
+    content: ceph.conf.j2
+  nova-ceph-key:
+    path: /etc/ceph/ceph.client.cinder.keyring
+    content: ceph.client.cinder.keyring.j2
+  ceph-libvirt-secret-config.sh:
+    path: /opt/ccp/bin/ceph-libvirt-secret-config.sh
+    content: ceph-libvirt-secret-config.sh.j2
+    perm: "0755"

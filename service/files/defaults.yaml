@@ -15,6 +15,10 @@ configs:
     console: "novnc"
     virt_type: "kvm"
 
+  ceph:
+    nova_enable: false
+    nova_pool_name: "vms"
+
 sources:
   openstack/nova:
     git_url: https://github.com/openstack/nova.git
