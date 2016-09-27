@@ -29,7 +29,7 @@ linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
 linuxnet_interface_driver = nova.network.linux_net.BridgeInterfaceDriver
 {% endif %}
 
-allow_resize_to_same_host = true
+allow_resize_to_same_host = True
 
 {% if enable_ironic %}
 scheduler_host_manager = nova.scheduler.ironic_host_manager.IronicHostManager
@@ -67,7 +67,7 @@ novncproxy_base_url = http://{{ address('nova-novncproxy') }}:{{ nova_novncproxy
 {% elif nova_console == 'spice' %}
 [vnc]
 # We have to turn off vnc to use spice
-enabled = false
+enabled = False
 [spice]
 server_listen = {{ network_topology["private"]["address"] }}
 server_proxyclient_address = {{ nova_spicehtml5proxy_host }}
@@ -92,7 +92,7 @@ api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 [oslo_messaging_rabbit]
 rabbit_userid = {{ rabbitmq_user }}
 rabbit_password = {{ rabbitmq_password }}
-rabbit_ha_queues = true
+rabbit_ha_queues = False
 # We need to pass an array of RBMQ server here
 # FIXME
 rabbit_hosts = {{ address('rabbitmq') }}
@@ -108,13 +108,13 @@ api_servers = {{ address('glance-api') }}:{{ glance_api_port }}
 num_retries = 1
 
 [cinder]
-catalog_info = volume:cinder:internalURL
+catalog_info = volumev2:cinder:internalURL
 
 [neutron]
 url = http://{{ address('neutron-server') }}:{{ neutron_server_port }}
 auth_strategy = keystone
 metadata_proxy_shared_secret = {{ metadata_secret }}
-service_metadata_proxy = true
+service_metadata_proxy = True
 
 auth_url = http://{{ address('keystone') }}:{{ keystone_admin_port }}
 auth_plugin = password
@@ -155,12 +155,12 @@ memcached_servers = {{ address('memcached') }}:{{ memcached_port }}
 [libvirt]
 #Need to split file in sections to avoid confussion with wrong IP here for non compute services
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
-{% if enable_ceph %}
+{% if nova_enable_ceph %}
 images_type = rbd
-images_rbd_pool = {{ ceph_nova_pool_name }}
+images_rbd_pool = {{ nova_ceph_pool_name }}
 images_rbd_ceph_conf = /etc/ceph/ceph.conf
-rbd_user = nova
-rbd_secret_uuid = {{ rbd_secret_uuid }}
+rbd_user = {{ cinder_ceph_username }}
+rbd_secret_uuid = {{ cinder_rbd_secret_uuid }}
 disk_cachemodes="network=writeback"
 live_migration_flag="VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED"
 hw_disk_discard = unmap
