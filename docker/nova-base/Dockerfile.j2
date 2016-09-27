@@ -1,14 +1,22 @@
 FROM {{ namespace }}/openstack-base:{{ tag }}
 MAINTAINER {{ maintainer }}
 
-RUN apt-get install -y --no-install-recommends \
+COPY sources.list.debian /etc/apt/sources.list.d/ceph.list
+RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 460F3994 \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
         bridge-utils \
         openvswitch-switch \
         iptables \
         ebtables \
         dnsmasq \
         openssh-client \
-    && apt-get clean
+        ceph-common \
+        python-ceph \
+        python-rados \
+    && apt-get clean \
+    && ln -s /usr/lib/python2.7/dist-packages/rados.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados.so \
+    && ln -s /usr/lib/python2.7/dist-packages/rados-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados-0.egg-info
 
 {{ copy_sources("openstack/nova", "/nova") }}
 
@@ -22,6 +30,7 @@ RUN useradd --user-group --create-home --home-dir /var/lib/nova nova \
 
 COPY nova_sudoers /etc/sudoers.d/nova_sudoers
 RUN chmod 750 /etc/sudoers.d \
-    && chmod 440 /etc/sudoers.d/nova_sudoers
-
-RUN usermod -a -G microservices nova
+    && chmod 440 /etc/sudoers.d/nova_sudoers \
+    && mkdir -p /etc/ceph \
+    && chown -R nova: /etc/ceph \
+    && usermod -a -G microservices nova
