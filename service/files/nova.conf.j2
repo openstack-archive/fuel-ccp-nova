@@ -31,9 +31,7 @@ linuxnet_interface_driver = nova.network.linux_net.BridgeInterfaceDriver
 
 allow_resize_to_same_host = true
 
-{% if enable_ironic %}
-scheduler_host_manager = nova.scheduler.ironic_host_manager.IronicHostManager
-{% endif %}
+scheduler_host_manager = ironic_host_manager
 
 {% if enable_nova_fake %}
 scheduler_default_filters = RetryFilter,AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter
@@ -41,6 +39,13 @@ host = {{ get_hostname() }}_{{ item }}
 compute_driver = fake.FakeDriver
 {% else %}
 compute_driver = libvirt.LibvirtDriver
+{% endif %}
+
+{% if role_name == "nova-compute-ironic" %}
+host = {{ node_name }}
+compute_driver = ironic.IronicDriver
+ram_allocation_ratio=1.0
+reserved_host_memory_mb=0
 {% endif %}
 
 # Here we need to pass an array of memcached daemons, for now we just use DNS
@@ -78,15 +83,17 @@ html5proxy_host = {{ nova_spicehtml5proxy_host }}
 html5proxy_port = {{ nova_spicehtml5proxy_port }}
 {% endif %}
 
-# FIXME
-{% if service_name == "nova-compute-ironic" %}
+{% if role_name == "nova-compute-ironic" %}
 [ironic]
-#(TODO) remember to update this once discoverd is replaced by inspector
-admin_username = {{ ironic_keystone_user }}
-admin_password = {{ ironic_keystone_password }}
-admin_url = {{ openstack_auth_url }}
-admin_tenant_name = service
-api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
+api_endpoint = http://{{ address('ironic-api') }}:{{ ironic.api_port }}/v1
+auth_url = http://{{ address('keystone') }}:{{ keystone.admin_port }}
+auth_strategy = keystone
+auth_plugin = password
+project_domain_name = default
+user_domain_id = default
+project_name = service
+username = {{ ironic.username }}
+password = {{ ironic.password }}
 {% endif %}
 
 [oslo_messaging_rabbit]
