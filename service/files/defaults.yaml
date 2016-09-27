@@ -7,9 +7,13 @@ configs:
   nova_metadata_port: "8775"
   nova_novncproxy_port: "6080"
   nova_logging_debug: false
-  enable_ceph: false
   metadata_secret: "password"
   nova_console: "novnc"
+
+  nova_enable_ceph: false
+  nova_ceph_username: "nova"
+  nova_ceph_pool_name: "vms"
+  nova_rbd_secret_uuid: "changeme"
 
 sources:
   openstack/nova:
