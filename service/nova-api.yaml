@@ -13,7 +13,7 @@ service:
       pre:
         - name: nova-db-create
           type: single
-          command: mysql -v -u root -p{{ db_root_password }} -h mariadb -e 'create database `{{ nova_db_name }}`;
+          command: mysql -v -u root -p{{ db_root_password }} -h {{ address('mariadb') }} -e 'create database `{{ nova_db_name }}`;
                    create database `{{ nova_api_db_name }}`;
                    grant all privileges on `{{ nova_db_name }}`.* to "{{ nova_db_username }}"@"%" identified by "{{ nova_db_password }}";
                    grant all privileges on `{{ nova_api_db_name }}`.* to "{{ nova_db_username }}"@"%" identified by "{{ nova_db_password }}"'
