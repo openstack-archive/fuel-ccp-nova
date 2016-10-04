@@ -116,7 +116,7 @@ auth_strategy = keystone
 metadata_proxy_shared_secret = {{ metadata_secret }}
 service_metadata_proxy = true
 
-auth_url = http://{{ address('keystone') }}:{{ keystone_admin_port }}
+auth_url = http://{{ address('keystone') }}:{{ keystone.admin_port }}
 auth_plugin = password
 project_domain_name = default
 user_domain_id = default
@@ -142,8 +142,8 @@ memcache_servers = {{ address('memcached') }}
 
 [keystone_authtoken]
 auth_version = v3
-auth_uri = http://{{ address('keystone') }}:{{ keystone_public_port }}/v3
-auth_url = http://{{ address('keystone') }}:{{ keystone_admin_port }}/v3
+auth_uri = http://{{ address('keystone') }}:{{ keystone.public_port }}/v3
+auth_url = http://{{ address('keystone') }}:{{ keystone.admin_port }}/v3
 auth_plugin = password
 project_domain_id = default
 user_domain_id = default
