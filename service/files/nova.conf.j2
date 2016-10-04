@@ -150,7 +150,7 @@ user_domain_id = default
 project_name = service
 username = {{ nova_db_username }}
 password = {{ nova_db_password }}
-memcached_servers = {{ address('memcached') }}:{{ memcached_port }}
+memcached_servers = {{ address('memcached') }}:{{ memcached.port }}
 
 [libvirt]
 #Need to split file in sections to avoid confussion with wrong IP here for non compute services
