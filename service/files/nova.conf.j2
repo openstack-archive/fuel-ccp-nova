@@ -102,7 +102,7 @@ lock_path = /var/lib/nova/tmp
 
 [glance]
 # FIXME
-api_servers = {{ address('glance-api') }}:{{ glance_api_port }}
+api_servers = {{ address('glance-api') }}:{{ glance.api_port }}
 # We need to do N number of retries here, N = number of glance-api daemons running
 # FIXME
 num_retries = 1
