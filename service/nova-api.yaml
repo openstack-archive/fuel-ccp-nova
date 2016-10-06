@@ -1,8 +1,8 @@
 service:
   name: nova-api
   ports:
-    - {{ nova_api_port }}
-    - {{ nova_metadata_port }}
+    - {{ nova.api_port }}
+    - {{ nova.metadata.port }}
   containers:
     - name: nova-api
       image: nova-api
@@ -13,10 +13,10 @@ service:
       pre:
         - name: nova-db-create
           type: single
-          command: mysql -v -u root -p{{ db.root_password }} -h {{ address('mariadb') }} -e 'create database `{{ nova_db_name }}`;
-                   create database `{{ nova_api_db_name }}`;
-                   grant all privileges on `{{ nova_db_name }}`.* to "{{ nova_db_username }}"@"%" identified by "{{ nova_db_password }}";
-                   grant all privileges on `{{ nova_api_db_name }}`.* to "{{ nova_db_username }}"@"%" identified by "{{ nova_db_password }}"'
+          command: mysql -v -u root -p{{ db.root_password }} -h {{ address('mariadb') }} -e 'create database `{{ nova.db.name }}`;
+                   create database `{{ nova.db.api_name }}`;
+                   grant all privileges on `{{ nova.db.name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}";
+                   grant all privileges on `{{ nova.db.api_name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"'
           dependencies:
             - mariadb
           files:
@@ -44,14 +44,14 @@ service:
             - nova.conf
         - name: nova-user-create
           type: single
-          command: openstack user create --project service --password {{ nova_db_password }} {{ nova_db_username }}
+          command: openstack user create --project service --password {{ nova.db.password }} {{ nova.db.username }}
           dependencies:
             - keystone-create-project
         - name: nova-role-add
           dependencies:
             - nova-user-create
           type: single
-          command: openstack role add --project service --user {{ nova_db_username }} admin
+          command: openstack role add --project service --user {{ nova.db.username }} admin
         - name: nova-service-create
           dependencies:
             - keystone
@@ -61,17 +61,17 @@ service:
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute public http://{{ address('nova-api') }}:{{ nova_api_port }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute public http://{{ address('nova-api') }}:{{ nova.api_port }}/v2/%\(tenant_id\)s
         - name: nova-internal-endpoint-create
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute internal http://{{ address('nova-api') }}:{{ nova_api_port }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute internal http://{{ address('nova-api') }}:{{ nova.api_port }}/v2/%\(tenant_id\)s
         - name: nova-admin-endpoint-create
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute admin http://{{ address('nova-api') }}:{{ nova_api_port }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute admin http://{{ address('nova-api') }}:{{ nova.api_port }}/v2/%\(tenant_id\)s
       daemon:
         command: nova-api --config-file /etc/nova/nova.conf
         files:

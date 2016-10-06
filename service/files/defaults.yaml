@@ -1,16 +1,19 @@
 configs:
-  nova_db_password: password
-  nova_db_name: nova
-  nova_api_db_name: nova-api
-  nova_db_username: nova
-  nova_api_port: 8774
-  nova_metadata_port: "8775"
-  nova_novncproxy_port: "6080"
-  nova_logging_debug: false
-  enable_ceph: false
-  metadata_secret: "password"
-  nova_console: "novnc"
-  nova_virt_type: "kvm"
+  nova:
+    db:
+      password: password
+      name: nova
+      api_name: nova-api
+      username: nova
+    api_port: 8774
+    novncproxy_port: "6080"
+    metadata:
+      port: "8775"
+      secret: "password"
+    logging_debug: false
+    enable_ceph: false
+    console: "novnc"
+    virt_type: "kvm"
 
 sources:
   openstack/nova:

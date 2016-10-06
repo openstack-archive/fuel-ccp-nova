@@ -1,21 +1,21 @@
 # nova.conf
 [DEFAULT]
-debug = {{ nova_logging_debug }}
+debug = {{ nova.logging_debug }}
 
 api_paste_config = /etc/nova/api-paste.ini
 state_path = /var/lib/nova
 
 #FIXME
 osapi_compute_listen = {{ network_topology["private"]["address"] }}
-osapi_compute_listen_port = {{ nova_api_port }}
+osapi_compute_listen_port = {{ nova.api_port }}
 
 #FIXME
 metadata_listen = {{ network_topology["private"]["address"] }}
-metadata_listen_port = {{ nova_metadata_port }}
+metadata_listen_port = {{ nova.metadata.port }}
 
 #FIXME
 ec2_listen = {{ network_topology["private"]["address"] }}
-ec2_listen_port = {{ nova_api_ec2_port }}
+ec2_listen_port = {{ nova.api_ec2_port }}
 
 notification_driver = noop
 
@@ -51,9 +51,9 @@ memcached_servers = {{ address('memcached') }}
 # Though my_ip is not used directly, lots of other variables use $my_ip
 my_ip = {{ network_topology["private"]["address"] }}
 
-{% if nova_console == 'novnc' %}
+{% if nova.console == 'novnc' %}
 novncproxy_host = {{ network_topology["private"]["address"] }}
-novncproxy_port = {{ nova_novncproxy_port }}
+novncproxy_port = {{ nova.novncproxy_port }}
 [vnc]
 vncserver_listen = {{ network_topology["private"]["address"] }}
 #FIXME
@@ -62,20 +62,20 @@ vncserver_proxyclient_address = {{ network_topology["private"]["address"] }}
 # FIXME
 {# if service_name == "nova-compute" #}
 #FIXME
-novncproxy_base_url = http://{{ address('nova-novncproxy') }}:{{ nova_novncproxy_port }}/vnc_auto.html
+novncproxy_base_url = http://{{ address('nova-novncproxy') }}:{{ nova.novncproxy_port }}/vnc_auto.html
 {# endif #}
-{% elif nova_console == 'spice' %}
+{% elif nova.console == 'spice' %}
 [vnc]
 # We have to turn off vnc to use spice
 enabled = false
 [spice]
 server_listen = {{ network_topology["private"]["address"] }}
-server_proxyclient_address = {{ nova_spicehtml5proxy_host }}
+server_proxyclient_address = {{ nova.spicehtml5proxy.host }}
 {% if service_name == "nova-compute" %}
-html5proxy_base_url = http://{{ address('nova-html5proxy') }}:{{ nova_spicehtml5proxy_port }}/spice_auto.html
+html5proxy_base_url = http://{{ address('nova-html5proxy') }}:{{ nova.spicehtml5proxy.port }}/spice_auto.html
 {% endif %}
-html5proxy_host = {{ nova_spicehtml5proxy_host }}
-html5proxy_port = {{ nova_spicehtml5proxy_port }}
+html5proxy_host = {{ nova.spicehtml5proxy.host }}
+html5proxy_port = {{ nova.spicehtml5proxy.port }}
 {% endif %}
 
 # FIXME
@@ -113,7 +113,7 @@ catalog_info = volume:cinder:internalURL
 [neutron]
 url = http://{{ address('neutron-server') }}:{{ neutron_server_port }}
 auth_strategy = keystone
-metadata_proxy_shared_secret = {{ metadata_secret }}
+metadata_proxy_shared_secret = {{ nova.metadata.secret }}
 service_metadata_proxy = true
 
 auth_url = http://{{ address('keystone') }}:{{ keystone.admin_port }}
@@ -125,13 +125,13 @@ username = {{ neutron_db_username }}
 password = {{ neutron_db_password }}
 
 [database]
-connection = mysql+pymysql://{{ nova_db_username }}:{{ nova_db_password }}@{{ address('mariadb') }}/{{ nova_db_name }}
+connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address('mariadb') }}/{{ nova.db.name }}
 max_pool_size = 50
 max_overflow = 1000
 max_retries = -1
 
 [api_database]
-connection = mysql+pymysql://{{ nova_db_username }}:{{ nova_db_password }}@{{ address('mariadb') }}/{{ nova_api_db_name }}
+connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address('mariadb') }}/{{ nova.db.api_name }}
 max_retries = -1
 
 [cache]
@@ -148,15 +148,15 @@ auth_plugin = password
 project_domain_id = default
 user_domain_id = default
 project_name = service
-username = {{ nova_db_username }}
-password = {{ nova_db_password }}
+username = {{ nova.db.username }}
+password = {{ nova.db.password }}
 memcached_servers = {{ address('memcached') }}:{{ memcached.port }}
 
 [libvirt]
-virt_type = {{ nova_virt_type }}
+virt_type = {{ nova.virt_type }}
 #Need to split file in sections to avoid confussion with wrong IP here for non compute services
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
-{% if enable_ceph %}
+{% if nova.enable_ceph %}
 images_type = rbd
 images_rbd_pool = {{ ceph_nova_pool_name }}
 images_rbd_ceph_conf = /etc/ceph/ceph.conf
