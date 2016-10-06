@@ -90,8 +90,8 @@ api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 {% endif %}
 
 [oslo_messaging_rabbit]
-rabbit_userid = {{ rabbitmq_user }}
-rabbit_password = {{ rabbitmq_password }}
+rabbit_userid = {{ rabbitmq.user }}
+rabbit_password = {{ rabbitmq.password }}
 rabbit_ha_queues = true
 # We need to pass an array of RBMQ server here
 # FIXME
