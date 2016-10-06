@@ -153,6 +153,7 @@ password = {{ nova_db_password }}
 memcached_servers = {{ address('memcached') }}:{{ memcached.port }}
 
 [libvirt]
+virt_type = {{ nova_virt_type }}
 #Need to split file in sections to avoid confussion with wrong IP here for non compute services
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
 {% if enable_ceph %}

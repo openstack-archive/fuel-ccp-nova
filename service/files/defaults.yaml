@@ -10,6 +10,7 @@ configs:
   enable_ceph: false
   metadata_secret: "password"
   nova_console: "novnc"
+  nova_virt_type: "kvm"
 
 sources:
   openstack/nova:
