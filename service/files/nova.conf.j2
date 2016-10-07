@@ -31,10 +31,6 @@ linuxnet_interface_driver = nova.network.linux_net.BridgeInterfaceDriver
 
 allow_resize_to_same_host = true
 
-{% if enable_ironic %}
-scheduler_host_manager = nova.scheduler.ironic_host_manager.IronicHostManager
-{% endif %}
-
 compute_driver = libvirt.LibvirtDriver
 
 # Here we need to pass an array of memcached daemons, for now we just use DNS
