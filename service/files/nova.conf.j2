@@ -35,13 +35,7 @@ allow_resize_to_same_host = true
 scheduler_host_manager = nova.scheduler.ironic_host_manager.IronicHostManager
 {% endif %}
 
-{% if enable_nova_fake %}
-scheduler_default_filters = RetryFilter,AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter
-host = {{ get_hostname() }}_{{ item }}
-compute_driver = fake.FakeDriver
-{% else %}
 compute_driver = libvirt.LibvirtDriver
-{% endif %}
 
 # Here we need to pass an array of memcached daemons, for now we just use DNS
 # FIXME
