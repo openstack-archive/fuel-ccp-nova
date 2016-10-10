@@ -23,9 +23,9 @@ use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 scheduler_max_attempts = 10
 
-{% if neutron_plugin_agent == "openvswitch" %}
+{% if neutron.plugin_agent == "openvswitch" %}
 linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
-{% elif neutron_plugin_agent == "linuxbridge" %}
+{% elif neutron.plugin_agent == "linuxbridge" %}
 linuxnet_interface_driver = nova.network.linux_net.BridgeInterfaceDriver
 {% endif %}
 
@@ -101,7 +101,7 @@ num_retries = 1
 catalog_info = volume:cinder:internalURL
 
 [neutron]
-url = http://{{ address('neutron-server') }}:{{ neutron_server_port }}
+url = http://{{ address('neutron-server') }}:{{ neutron.server_port }}
 auth_strategy = keystone
 metadata_proxy_shared_secret = {{ nova.metadata.secret }}
 service_metadata_proxy = true
@@ -111,8 +111,8 @@ auth_plugin = password
 project_domain_name = default
 user_domain_id = default
 project_name = service
-username = {{ neutron_db_username }}
-password = {{ neutron_db_password }}
+username = {{ neutron.db.username }}
+password = {{ neutron.db.password }}
 
 [database]
 connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address('mariadb') }}/{{ nova.db.name }}
