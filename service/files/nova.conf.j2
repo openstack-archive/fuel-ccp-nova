@@ -2,7 +2,6 @@
 [DEFAULT]
 debug = {{ nova.logging_debug }}
 
-api_paste_config = /etc/nova/api-paste.ini
 state_path = /var/lib/nova
 
 #FIXME
@@ -159,3 +158,6 @@ hw_disk_discard = unmap
 
 [upgrade_levels]
 compute = auto
+
+[wsgi]
+api_paste_config = /etc/nova/api-paste.ini
