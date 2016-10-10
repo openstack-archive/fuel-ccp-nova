@@ -42,9 +42,9 @@ memcached_servers = {{ address('memcached') }}
 my_ip = {{ network_topology["private"]["address"] }}
 
 {% if nova.console == 'novnc' %}
+[vnc]
 novncproxy_host = {{ network_topology["private"]["address"] }}
 novncproxy_port = {{ nova.novncproxy_port }}
-[vnc]
 vncserver_listen = {{ network_topology["private"]["address"] }}
 #FIXME
 vncserver_proxyclient_address = {{ network_topology["private"]["address"] }}
