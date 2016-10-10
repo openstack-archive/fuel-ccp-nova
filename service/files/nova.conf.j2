@@ -16,8 +16,6 @@ metadata_listen_port = {{ nova.metadata.port }}
 ec2_listen = {{ network_topology["private"]["address"] }}
 ec2_listen_port = {{ nova.api_ec2_port }}
 
-notification_driver = noop
-
 use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 scheduler_max_attempts = 10
@@ -77,6 +75,9 @@ admin_url = {{ openstack_auth_url }}
 admin_tenant_name = service
 api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 {% endif %}
+
+[oslo_messaging_notifications]
+driver = noop
 
 [oslo_messaging_rabbit]
 rabbit_userid = {{ rabbitmq.user }}
