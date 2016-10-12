@@ -33,7 +33,7 @@ service:
         command: nova-compute --config-file /etc/nova/nova.conf
         dependencies:
           - nova-db-migrations
-          - nova-libvirt
+          - nova-libvirt:local
         files:
           - nova.conf
 files:
