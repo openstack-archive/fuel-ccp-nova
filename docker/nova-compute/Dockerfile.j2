@@ -11,8 +11,7 @@ RUN apt-get -y install --no-install-recommends \
     && apt-get clean \
     && mkdir -p /etc/ceph
 
-RUN git clone https://github.com/openstack/requirements.git && \
-    /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c requirements/upper-constraints.txt libvirt-python rtslib-fb && \
+RUN /var/lib/microservices/venv/bin/pip install --upgrade libvirt-python rtslib-fb && \
     rm -rf requirements && \
     rm -f /etc/machine-id
 
