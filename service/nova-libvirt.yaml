@@ -9,7 +9,9 @@ service:
       privileged: true
       probes:
         readiness: "true"
-        liveness: "true"
+        liveness:
+          command: "true"
+          type: "exec"
       volumes:
         - name: run
           type: host

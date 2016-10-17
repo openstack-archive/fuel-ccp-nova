@@ -5,7 +5,9 @@ service:
       image: nova-scheduler
       probes:
         readiness: "true"
-        liveness: "true"
+        liveness:
+          command: "true"
+          type: "exec"
       daemon:
         command: nova-scheduler --config-file /etc/nova/nova.conf
         files:
