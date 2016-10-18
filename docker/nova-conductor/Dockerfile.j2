@@ -1,4 +1,4 @@
-FROM {{ namespace }}/nova-base:{{ tag }}
+FROM {{ image_spec("nova-base") }}
 MAINTAINER {{ maintainer }}
 
 USER nova

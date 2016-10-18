@@ -1,4 +1,4 @@
-FROM {{ namespace }}/openstack-base:{{ tag }}
+FROM {{ image_spec("openstack-base") }}
 MAINTAINER {{ maintainer }}
 
 RUN apt-get install -y --no-install-recommends \
