@@ -5,10 +5,13 @@ configs:
       name: nova
       api_name: nova-api
       username: nova
-    api_port: 8774
-    novncproxy_port: "6080"
+    api_port:
+      cont: 8774
+    novncproxy_port:
+      cont: 6080
     metadata:
-      port: "8775"
+      port:
+        cont: 8775
       secret: "password"
     logging_debug: false
     enable_ceph: false
