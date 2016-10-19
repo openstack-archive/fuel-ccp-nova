@@ -7,8 +7,10 @@ configs:
       username: nova
     api_port:
       cont: 8774
+      ingress: compute
     novncproxy_port:
       cont: 6080
+      ingress: console
     metadata:
       port:
         cont: 8775

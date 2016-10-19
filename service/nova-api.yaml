@@ -61,7 +61,7 @@ service:
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute public http://{{ address('nova-api') }}:{{ nova.api_port }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute public http://{{ address('nova-api', nova.api_port, external=True) }}/v2/%\(tenant_id\)s
         - name: nova-internal-endpoint-create
           dependencies:
             - nova-service-create
