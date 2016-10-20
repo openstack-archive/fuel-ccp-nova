@@ -12,10 +12,6 @@ osapi_compute_listen_port = {{ nova.api_port }}
 metadata_listen = {{ network_topology["private"]["address"] }}
 metadata_listen_port = {{ nova.metadata.port }}
 
-#FIXME
-ec2_listen = {{ network_topology["private"]["address"] }}
-ec2_listen_port = {{ nova.api_ec2_port }}
-
 # We need to pass an array of RBMQ server here
 # FIXME
 transport_url=rabbit://{{ rabbitmq.user }}:{{ rabbitmq.password }}@{{ address('rabbitmq') }}
