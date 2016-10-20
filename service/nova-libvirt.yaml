@@ -1,6 +1,7 @@
 service:
   name: nova-libvirt
   host-net: true
+  hostPID: true
   daemonset: true
   containers:
     - name: nova-libvirt
@@ -22,6 +23,9 @@ service:
         - name: libvirt
           type: host
           path: /var/lib/libvirt
+        - name: cgroup
+          type: host
+          path: /sys/fs/cgroup
       pre:
         - name: nova-libvirt-bootstrap
           command: /tmp/nova-libvirt-bootstrap.sh
