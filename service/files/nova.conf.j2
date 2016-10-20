@@ -18,6 +18,10 @@ ec2_listen_port = {{ nova.api_ec2_port }}
 
 notification_driver = noop
 
+# We need to pass an array of RBMQ server here
+# FIXME
+transport_url=rabbit://{{ rabbitmq.user }}:{{ rabbitmq.password }}@{{ address('rabbitmq') }}
+
 use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 scheduler_max_attempts = 10
@@ -79,13 +83,7 @@ api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 {% endif %}
 
 [oslo_messaging_rabbit]
-rabbit_userid = {{ rabbitmq.user }}
-rabbit_password = {{ rabbitmq.password }}
 rabbit_ha_queues = true
-# We need to pass an array of RBMQ server here
-# FIXME
-rabbit_hosts = {{ address('rabbitmq') }}
-
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 
