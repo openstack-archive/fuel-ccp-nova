@@ -16,8 +16,6 @@ metadata_listen_port = {{ nova.metadata.port }}
 ec2_listen = {{ network_topology["private"]["address"] }}
 ec2_listen_port = {{ nova.api_ec2_port }}
 
-notification_driver = noop
-
 # We need to pass an array of RBMQ server here
 # FIXME
 transport_url=rabbit://{{ rabbitmq.user }}:{{ rabbitmq.password }}@{{ address('rabbitmq') }}
@@ -81,6 +79,9 @@ admin_url = {{ openstack_auth_url }}
 admin_tenant_name = service
 api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 {% endif %}
+
+[oslo_messaging_notifications]
+driver = noop
 
 [oslo_messaging_rabbit]
 rabbit_ha_queues = true
