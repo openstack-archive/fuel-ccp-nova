@@ -1,7 +1,7 @@
 service:
   name: nova-libvirt
   kind: DaemonSet
-  host-net: true
+  hostNetwork: true
   hostPID: true
   containers:
     - name: nova-libvirt
