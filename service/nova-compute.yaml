@@ -1,7 +1,7 @@
 service:
   name: nova-compute
+  kind: DaemonSet
   host-net: true
-  daemonset: true
   containers:
     - name: nova-compute
       image: nova-compute
