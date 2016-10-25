@@ -34,6 +34,7 @@ service:
         dependencies:
           - nova-db-migrations
           - nova-libvirt:local
+          - nova-conductor
         files:
           - nova.conf
           # {% if nova.ceph.enable %}
