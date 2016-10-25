@@ -34,6 +34,10 @@ compute_driver = libvirt.LibvirtDriver
 # FIXME
 memcached_servers = {{ address('memcached') }}
 
+# allocation ratio params
+cpu_allocation_ratio = {{ nova.allocation_ratio.cpu }}
+disk_allocation_ratio = {{ nova.allocation_ratio.disk }}
+ram_allocation_ratio = {{ nova.allocation_ratio.ram }}
 
 # Though my_ip is not used directly, lots of other variables use $my_ip
 my_ip = {{ network_topology["private"]["address"] }}
