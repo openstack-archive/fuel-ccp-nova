@@ -14,6 +14,11 @@ configs:
     console: "novnc"
     virt_type: "kvm"
 
+    allocation_ratio:
+      cpu: 0.0
+      disk: 0.0
+      ram: 0.0
+
     ceph:
       enable: false
       pool_name: "vms"
