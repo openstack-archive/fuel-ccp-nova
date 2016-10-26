@@ -63,17 +63,17 @@ service:
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute public http://{{ address('nova-api') }}:{{ nova.api_port }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute public http://{{ address('nova-api') }}:{{ nova.api_port.cont }}/v2/%\(tenant_id\)s
         - name: nova-internal-endpoint-create
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute internal http://{{ address('nova-api') }}:{{ nova.api_port }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute internal http://{{ address('nova-api') }}:{{ nova.api_port.cont }}/v2/%\(tenant_id\)s
         - name: nova-admin-endpoint-create
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute admin http://{{ address('nova-api') }}:{{ nova.api_port }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute admin http://{{ address('nova-api') }}:{{ nova.api_port.cont }}/v2/%\(tenant_id\)s
       daemon:
         command: nova-api --config-file /etc/nova/nova.conf
         files:
