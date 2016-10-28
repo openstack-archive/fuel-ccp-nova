@@ -32,7 +32,7 @@ compute_driver = libvirt.LibvirtDriver
 
 # Here we need to pass an array of memcached daemons, for now we just use DNS
 # FIXME
-memcached_servers = {{ address('memcached') }}
+memcached_servers = {{ address("memcached", memcached.port, multiple=True) }}
 
 # allocation ratio params
 cpu_allocation_ratio = {{ nova.allocation_ratio.cpu }}
@@ -126,7 +126,7 @@ max_retries = -1
 backend = oslo_cache.memcache_pool
 enabled = True
 # FIXME
-memcache_servers = {{ address('memcached') }}
+memcache_servers = {{ address("memcached", memcached.port, multiple=True) }}
 
 [keystone_authtoken]
 auth_version = v3
@@ -138,7 +138,7 @@ user_domain_id = default
 project_name = service
 username = {{ nova.db.username }}
 password = {{ nova.db.password }}
-memcached_servers = {{ address('memcached') }}:{{ memcached.port.cont }}
+memcached_servers = {{ address("memcached", memcached.port, multiple=True) }}
 
 [libvirt]
 virt_type = {{ nova.virt_type }}
