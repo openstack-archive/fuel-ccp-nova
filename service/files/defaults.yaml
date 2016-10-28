@@ -10,6 +10,7 @@ configs:
       ingress: compute
     novncproxy_port:
       cont: 6080
+      node: 30680
       ingress: console
     metadata:
       port:

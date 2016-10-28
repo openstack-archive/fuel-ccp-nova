@@ -47,14 +47,8 @@ my_ip = {{ network_topology["private"]["address"] }}
 novncproxy_host = {{ network_topology["private"]["address"] }}
 novncproxy_port = {{ nova.novncproxy_port.cont }}
 vncserver_listen = {{ network_topology["private"]["address"] }}
-#FIXME
 vncserver_proxyclient_address = {{ network_topology["private"]["address"] }}
-# We need to create a cont name jinja vars
-# FIXME
-{# if service_name == "nova-compute" #}
-#FIXME
 novncproxy_base_url = http://{{ address('nova-novncproxy', nova.novncproxy_port, external=True) }}/vnc_auto.html
-{# endif #}
 {% elif nova.console == 'spice' %}
 [vnc]
 # We have to turn off vnc to use spice
