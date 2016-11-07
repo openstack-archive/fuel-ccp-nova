@@ -1,8 +1,9 @@
 FROM {{ image_spec("openstack-base") }}
 MAINTAINER {{ maintainer }}
 
-COPY sources.list.debian /etc/apt/sources.list.d/ceph.list
-RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 460F3994 \
+COPY {{ render('sources.list.debian.j2') }} /etc/apt/sources.list.d/ceph.list
+RUN apt-key adv --recv-keys --keyserver {{ url.ceph.debian.keyserver }} \
+    {{ url.ceph.debian.keyid }} \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         bridge-utils \
