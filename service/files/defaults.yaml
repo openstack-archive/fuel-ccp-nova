@@ -19,6 +19,9 @@ configs:
       enable: false
       pool_name: "vms"
 
+url:
+  ceph: http://eu.ceph.com/debian-jewel
+
 sources:
   openstack/nova:
     git_url: https://github.com/openstack/nova.git
