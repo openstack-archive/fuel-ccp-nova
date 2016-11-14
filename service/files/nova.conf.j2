@@ -131,6 +131,7 @@ memcached_servers = {{ address('memcached', memcached.port) }}
 [libvirt]
 virt_type = {{ nova.virt_type }}
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
+live_migration_uri="qemu+tcp://%s/system"
 {% if nova.ceph.enable %}
 images_type = rbd
 images_rbd_pool = {{ nova.ceph.pool_name }}
