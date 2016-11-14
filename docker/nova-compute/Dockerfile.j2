@@ -10,6 +10,7 @@ RUN apt-get -y install --no-install-recommends \
         python-rados \
         genisoimage \
         open-iscsi \
+        dosfstools \
     && apt-get clean \
     && mkdir -p /etc/ceph \
     && chown -R nova: /etc/ceph \
