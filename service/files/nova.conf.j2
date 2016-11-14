@@ -142,6 +142,8 @@ memcached_servers = {{ address('memcached') }}:{{ memcached.port.cont }}
 
 [libvirt]
 virt_type = {{ nova.virt_type }}
+live_migration_flag="VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED"
+live_migration_uri="qemu+tcp://%s/system"
 #Need to split file in sections to avoid confussion with wrong IP here for non compute services
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
 {% if nova.ceph.enable %}
@@ -151,7 +153,6 @@ images_rbd_ceph_conf = /etc/ceph/ceph.conf
 rbd_user = {{ cinder.ceph.username }}
 rbd_secret_uuid = {{ cinder.ceph.rbd_secret_uuid }}
 disk_cachemodes="network=writeback"
-live_migration_flag="VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED"
 hw_disk_discard = unmap
 {% endif %}
 
