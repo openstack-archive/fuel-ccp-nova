@@ -27,6 +27,9 @@ allow_resize_to_same_host = true
 compute_driver = libvirt.LibvirtDriver
 
 force_config_drive = True
+# vfat format doesn't require sending config drive over scp (like in case
+# of default iso format)
+config_drive_format = vfat
 
 # allocation ratio params
 cpu_allocation_ratio = {{ nova.allocation_ratio.cpu }}
@@ -131,6 +134,14 @@ memcached_servers = {{ address('memcached', memcached.port) }}
 [libvirt]
 virt_type = {{ nova.virt_type }}
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
+# More correct setting would be:
+# live_migration_inbound_addr = "{{ network_topology["private"]["address"] }}"
+# and no live_migration_uri (it's not required in this case)
+# But this won't work in master untill https://review.openstack.org/#/c/398956/ is merged
+# and in Newton until fixes are backported.
+# FIXME
+live_migration_uri = "qemu+tcp://%s/system"
+live_migration_tunnelled = false
 {% if nova.ceph.enable %}
 images_type = rbd
 images_rbd_pool = {{ nova.ceph.pool_name }}
