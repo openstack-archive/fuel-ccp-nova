@@ -70,7 +70,7 @@ api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 {% endif %}
 
 [oslo_messaging_notifications]
-driver = noop
+driver = messaging
 
 [oslo_messaging_rabbit]
 rabbit_ha_queues = False
