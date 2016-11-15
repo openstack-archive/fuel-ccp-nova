@@ -26,6 +26,8 @@ allow_resize_to_same_host = True
 
 compute_driver = libvirt.LibvirtDriver
 
+force_config_drive = True
+
 # allocation ratio params
 cpu_allocation_ratio = {{ nova.allocation_ratio.cpu }}
 disk_allocation_ratio = {{ nova.allocation_ratio.disk }}
