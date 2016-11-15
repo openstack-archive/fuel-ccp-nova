@@ -4,16 +4,12 @@ debug = {{ nova.logging_debug }}
 
 state_path = /var/lib/nova
 
-#FIXME
 osapi_compute_listen = {{ network_topology["private"]["address"] }}
 osapi_compute_listen_port = {{ nova.api_port.cont }}
 
-#FIXME
 metadata_listen = {{ network_topology["private"]["address"] }}
 metadata_listen_port = {{ nova.metadata.port.cont }}
 
-# We need to pass an array of RBMQ server here
-# FIXME
 transport_url=rabbit://{{ rabbitmq.user }}:{{ rabbitmq.password }}@{{ address('rabbitmq') }}
 
 use_neutron = True
@@ -32,7 +28,7 @@ compute_driver = libvirt.LibvirtDriver
 
 # Here we need to pass an array of memcached daemons, for now we just use DNS
 # FIXME
-memcached_servers = {{ address('memcached') }}
+memcached_servers = {{ address('memcached') }}:{{ memcached.port.cont }}
 
 # allocation ratio params
 cpu_allocation_ratio = {{ nova.allocation_ratio.cpu }}
@@ -47,14 +43,10 @@ my_ip = {{ network_topology["private"]["address"] }}
 novncproxy_host = {{ network_topology["private"]["address"] }}
 novncproxy_port = {{ nova.novncproxy_port.cont }}
 vncserver_listen = {{ network_topology["private"]["address"] }}
-#FIXME
 vncserver_proxyclient_address = {{ network_topology["private"]["address"] }}
-# We need to create a cont name jinja vars
-# FIXME
-{# if service_name == "nova-compute" #}
-#FIXME
+{% if service_name == "nova-compute" %}
 novncproxy_base_url = {{ address('nova-novncproxy', nova.novncproxy_port, external=True, with_scheme=True) }}/vnc_auto.html
-{# endif #}
+{% endif %}
 {% elif nova.console == 'spice' %}
 [vnc]
 # We have to turn off vnc to use spice
@@ -69,7 +61,6 @@ html5proxy_host = {{ nova.spicehtml5proxy.host }}
 html5proxy_port = {{ nova.spicehtml5proxy.port.cont }}
 {% endif %}
 
-# FIXME
 {% if service_name == "nova-compute-ironic" %}
 [ironic]
 #(TODO) remember to update this once discoverd is replaced by inspector
@@ -84,12 +75,12 @@ api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 driver = noop
 
 [oslo_messaging_rabbit]
-rabbit_ha_queues = true
+rabbit_ha_queues = False
+
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 
 [glance]
-# FIXME
 api_servers = {{ address('glance-api') }}:{{ glance.api_port.cont }}
 # We need to do N number of retries here, N = number of glance-api daemons running
 # FIXME
@@ -102,7 +93,7 @@ catalog_info = volumev2:cinder:internalURL
 url = http://{{ address('neutron-server') }}:{{ neutron.server_port.cont }}
 auth_strategy = keystone
 metadata_proxy_shared_secret = {{ nova.metadata.secret }}
-service_metadata_proxy = true
+service_metadata_proxy = True
 
 auth_url = http://{{ address('keystone') }}:{{ keystone.admin_port.cont }}
 auth_type = password
@@ -125,8 +116,9 @@ max_retries = -1
 [cache]
 backend = oslo_cache.memcache_pool
 enabled = True
+# Here we need to pass an array of memcached daemons, for now we just use DNS
 # FIXME
-memcache_servers = {{ address('memcached') }}
+memcache_servers = {{ address('memcached') }}:{{ memcached.port.cont }}
 
 [keystone_authtoken]
 auth_version = v3
@@ -138,11 +130,12 @@ user_domain_id = default
 project_name = service
 username = {{ nova.db.username }}
 password = {{ nova.db.password }}
+# Here we need to pass an array of memcached daemons, for now we just use DNS
+#FIXME
 memcached_servers = {{ address('memcached') }}:{{ memcached.port.cont }}
 
 [libvirt]
 virt_type = {{ nova.virt_type }}
-#Need to split file in sections to avoid confussion with wrong IP here for non compute services
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
 {% if nova.ceph.enable %}
 images_type = rbd
@@ -151,7 +144,6 @@ images_rbd_ceph_conf = /etc/ceph/ceph.conf
 rbd_user = {{ cinder.ceph.username }}
 rbd_secret_uuid = {{ cinder.ceph.rbd_secret_uuid }}
 disk_cachemodes="network=writeback"
-live_migration_flag="VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED"
 hw_disk_discard = unmap
 {% endif %}
 
