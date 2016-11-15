@@ -72,7 +72,7 @@ driver = noop
 rabbit_ha_queues = false
 
 [oslo_concurrency]
-lock_path = /var/lib/nova/tmp
+lock_path = /var/lib/nova-cinder-lock
 
 [glance]
 api_servers = {{ address('glance-api', glance.api_port) }}

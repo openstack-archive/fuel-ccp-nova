@@ -25,6 +25,9 @@ service:
         - name: libvirt
           type: host
           path: /var/lib/libvirt
+        - name: nova-cinder-lock
+          type: host
+          path: /var/lib/nova-cinder-lock
       pre:
         - name: disable-netfilter-4
           command: "echo sudo sysctl net.bridge.bridge-nf-call-iptables=1"
@@ -32,6 +35,8 @@ service:
           command: "echo sudo sysctl net.bridge.bridge-nf-call-ip6tables=1"
         - name: create-dir
           command: "sudo /bin/chown -R nova: /var/lib/nova ; mkdir -p /var/lib/nova/instances"
+        - name: chmod-lock-dir
+          command: "/bin/chmod 0777 /var/lib/nova-cinder-lock"
       daemon:
         command: nova-compute --config-file /etc/nova/nova.conf
         dependencies:
