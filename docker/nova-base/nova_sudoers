@@ -1,1 +1,1 @@
-nova ALL=(root) NOPASSWD: /var/lib/microservices/venv/bin/nova-rootwrap /etc/nova/rootwrap.conf *, /bin/chown -R nova\: /var/lib/nova
+nova ALL=(root) NOPASSWD: /var/lib/microservices/venv/bin/nova-rootwrap /etc/nova/rootwrap.conf *, /bin/chown -R nova\: /var/lib/nova, /bin/chmod 0777 /var/lib/nova-cinder-lock
