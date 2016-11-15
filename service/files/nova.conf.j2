@@ -26,10 +26,6 @@ allow_resize_to_same_host = True
 
 compute_driver = libvirt.LibvirtDriver
 
-# Here we need to pass an array of memcached daemons, for now we just use DNS
-# FIXME
-memcached_servers = {{ address('memcached') }}:{{ memcached.port.cont }}
-
 # allocation ratio params
 cpu_allocation_ratio = {{ nova.allocation_ratio.cpu }}
 disk_allocation_ratio = {{ nova.allocation_ratio.disk }}
