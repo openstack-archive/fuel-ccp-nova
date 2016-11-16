@@ -1,0 +1,10 @@
+#!/bin/bash -ex
+set -o pipefail
+BACKUP_FILE="/var/ccp/backup/nova/backup-$(date "+%Y%m%d%H%M%S").sql"
+mysqldump -h {{ address(service.database) }} \
+    -u {{ nova.db.username }} -p{{ nova.db.password }} \
+    --single-transaction {{ nova.db.name }} > "${BACKUP_FILE}"
+BACKUP_FILE_API="/var/ccp/backup/nova/backup-$(date "+%Y%m%d%H%M%S")-api.sql"
+mysqldump -h {{ address(service.database) }} \
+    -u {{ nova.db.username }} -p{{ nova.db.password }} \
+    --single-transaction {{ nova.db.api_name }} > "${BACKUP_FILE_API}"
