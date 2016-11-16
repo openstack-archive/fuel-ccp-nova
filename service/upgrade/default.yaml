@@ -1,7 +1,17 @@
 upgrade:
   name: upgrade-nova
-  image: nova-api
+  image: nova-upgrade
   steps:
+    - name: backup
+      command: /tmp/backup.sh
+      files:
+        - backup-sh
+      volumes:
+        - name: backup-dir
+          path: /var/ccp/backup/nova
+          type: host
+          readOnly: false
+      topology_key: backup
     - name: db-sync
       command: nova-manage db sync
       files:
@@ -45,3 +55,7 @@ files:
     path: /etc/nova/nova.conf
     content: nova.conf.j2
     perm: "0600"
+  backup-sh:
+    path: /tmp/backup.sh
+    content: backup.sh.j2
+    perm: "555"
