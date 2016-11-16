@@ -90,7 +90,7 @@ lock_path = /var/lib/nova/tmp
 
 [glance]
 # FIXME
-api_servers = {{ address('glance-api') }}:{{ glance.api_port.cont }}
+api_servers = {{ address('glance-api', glance.api_port) }}
 # We need to do N number of retries here, N = number of glance-api daemons running
 # FIXME
 num_retries = 1
@@ -99,12 +99,12 @@ num_retries = 1
 catalog_info = volumev2:cinder:internalURL
 
 [neutron]
-url = http://{{ address('neutron-server') }}:{{ neutron.server_port.cont }}
+url = {{ address('neutron-server', neutron.server_port, with_scheme=True) }}
 auth_strategy = keystone
 metadata_proxy_shared_secret = {{ nova.metadata.secret }}
 service_metadata_proxy = true
 
-auth_url = http://{{ address('keystone') }}:{{ keystone.admin_port.cont }}
+auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}
 auth_type = password
 project_domain_name = default
 user_domain_id = default
@@ -130,15 +130,15 @@ memcache_servers = {{ address('memcached') }}
 
 [keystone_authtoken]
 auth_version = v3
-auth_uri = http://{{ address('keystone') }}:{{ keystone.public_port.cont }}/v3
-auth_url = http://{{ address('keystone') }}:{{ keystone.admin_port.cont }}/v3
+auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True) }}/v3
+auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}/v3
 auth_type = password
 project_domain_id = default
 user_domain_id = default
 project_name = service
 username = {{ nova.db.username }}
 password = {{ nova.db.password }}
-memcached_servers = {{ address('memcached') }}:{{ memcached.port.cont }}
+memcached_servers = {{ address('memcached', memcached.port) }}
 
 [libvirt]
 virt_type = {{ nova.virt_type }}
