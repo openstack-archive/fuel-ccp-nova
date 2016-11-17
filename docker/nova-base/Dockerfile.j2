@@ -22,7 +22,8 @@ RUN useradd --user-group --create-home --home-dir /var/lib/nova nova \
     && mkdir -p /etc/nova /var/lib/nova /var/log/nova \
     && cp -r /nova/etc/nova/* /etc/nova/ \
     && chown -R nova: /etc/nova /var/lib/nova /var/log/nova \
-    && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/microservices/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/nova/rootwrap.conf
+    && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/microservices/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/nova/rootwrap.conf \
+    && rm -rf /nova
 
 COPY nova_sudoers /etc/sudoers.d/nova_sudoers
 RUN chmod 750 /etc/sudoers.d \
