@@ -113,13 +113,13 @@ username = {{ neutron.db.username }}
 password = {{ neutron.db.password }}
 
 [database]
-connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address('mariadb') }}/{{ nova.db.name }}
+connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address(service.database) }}/{{ nova.db.name }}
 max_pool_size = 50
 max_overflow = 1000
 max_retries = -1
 
 [api_database]
-connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address('mariadb') }}/{{ nova.db.api_name }}
+connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address(service.database) }}/{{ nova.db.api_name }}
 max_retries = -1
 
 [cache]
