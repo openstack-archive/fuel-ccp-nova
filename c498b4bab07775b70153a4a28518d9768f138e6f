@@ -1,0 +1,11 @@
+Code-Review+1: Roman Podoliaka <rpodolyaka@mirantis.com>
+Code-Review+2: Sergey Lukjanov <slukjanov@mirantis.com>
+Verified+1: Mirantis CCP CI <mirantis-fuel-ccp-ci@mirantis.com>
+Code-Review+2: Yuriy Taraday <yorik.sar@gmail.com>
+Workflow+1: Yuriy Taraday <yorik.sar@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 18 Nov 2016 17:36:10 +0000
+Reviewed-on: https://review.openstack.org/397709
+Project: openstack/fuel-ccp-nova
+Branch: refs/heads/master
