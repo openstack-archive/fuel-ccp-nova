@@ -33,6 +33,9 @@ cpu_allocation_ratio = {{ nova.allocation_ratio.cpu }}
 disk_allocation_ratio = {{ nova.allocation_ratio.disk }}
 ram_allocation_ratio = {{ nova.allocation_ratio.ram }}
 
+# scheduler filter params
+scheduler_default_filters = {{ nova.scheduler.enabled_filters | join(",") }}
+
 # Though my_ip is not used directly, lots of other variables use $my_ip
 my_ip = {{ network_topology["private"]["address"] }}
 
