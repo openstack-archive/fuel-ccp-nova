@@ -15,6 +15,18 @@ configs:
       port:
         cont: 8775
       secret: "password"
+    scheduler:
+      enabled_filters:
+        - AvailabilityZoneFilter
+        - ComputeCapabilitiesFilter
+        - ComputeFilter
+        - DifferentHostFilter
+        - ExactCoreFilter
+        - ExactDiskFilter
+        - ExactRamFilter
+        - ImagePropertiesFilter
+        - RetryFilter
+        - SameHostFilter
     logging_debug: false
     console: "novnc"
     virt_type: "kvm"
