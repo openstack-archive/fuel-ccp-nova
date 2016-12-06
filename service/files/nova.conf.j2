@@ -136,8 +136,22 @@ memcached_servers = {{ address('memcached', memcached.port) }}
 
 [libvirt]
 virt_type = {{ nova.virt_type }}
+{% if nova.libvirt.tls_enable %}
+# TLS config:
+# 1. NOTE: nova will use default connection_uri to connect to libvirt,
+# e.g. qemu:/// which assumes nova-compute and libvirtd are on the same host.
+#
+# 2. We are using %s in live_migration_uri as workaround for TLS config with
+# wildcard PKI certificates because they are issued for hostnames not IPs.
+# We also need to pass domainname so FQDN (not just hostname) is used when
+# initiating TLS connection and TLS can match server certificate to FQDN.
+# FIXME
+live_migration_uri = "qemu+tls://%s.{{ cluster_domain }}/system"
+{% else %}
+# non-TLS config:
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
 live_migration_inbound_addr = "{{ network_topology["private"]["address"] }}"
+{% endif %}
 {% if nova.ceph.enable %}
 images_type = rbd
 images_rbd_pool = {{ nova.ceph.pool_name }}
