@@ -39,6 +39,8 @@ service:
         files:
           - libvirtd.conf
           - nova-libvirt-bootstrap.sh
+          - libvirt-server_certificate
+          - libvirt-client_certificate
           - qemu.conf
           # {% if nova.ceph.enable %}
           - rbd-secret
@@ -59,6 +61,14 @@ files:
     path: /tmp/nova-libvirt-bootstrap.sh
     content: nova-libvirt-bootstrap.sh
     perm: "0755"
+  libvirt-server_certificate:
+    path: /etc/pki/libvirt/server_certificate.pem
+    content: libvirt.server_certificate.j2
+    perm: "0600"
+  libvirt-client_certificate:
+    path: /etc/pki/libvirt/client_certificate.pem
+    content: libvirt.client_certificate.j2
+    perm: "0600"
   qemu.conf:
     path: /etc/libvirt/qemu.conf
     content: qemu.conf.j2
