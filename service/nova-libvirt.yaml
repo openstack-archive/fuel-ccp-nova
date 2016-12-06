@@ -42,6 +42,13 @@ service:
         files:
           - libvirtd.conf
           - nova-libvirt-bootstrap.sh
+          # {% if nova.libvirt.tls_enable %}
+          - libvirt-cacert
+          - libvirt-servercert
+          - libvirt-serverkey
+          - libvirt-clientcert
+          - libvirt-clientkey
+          # {% endif %}
           - qemu.conf
           # {% if nova.ceph.enable %}
           - rbd-secret
@@ -62,6 +69,28 @@ files:
     path: /tmp/nova-libvirt-bootstrap.sh
     content: nova-libvirt-bootstrap.sh
     perm: "0755"
+  # {% if nova.libvirt.tls_enable %}
+  libvirt-cacert:
+    path: /etc/pki/CA/cacert.pem
+    content: libvirt.cacert.j2
+    perm: "0444"
+  libvirt-servercert:
+    path: /etc/pki/libvirt/servercert.pem
+    content: libvirt.servercert.j2
+    perm: "0440"
+  libvirt-serverkey:
+    path: /etc/pki/libvirt/private/serverkey.pem
+    content: libvirt.serverkey.j2
+    perm: "0440"
+  libvirt-clientcert:
+    path: /etc/pki/libvirt/clientcert.pem
+    content: libvirt.clientcert.j2
+    perm: "0400"
+  libvirt-clientkey:
+    path: /etc/pki/libvirt/private/clientkey.pem
+    content: libvirt.clientkey.j2
+    perm: "0400"
+  # {% endif %}
   qemu.conf:
     path: /etc/libvirt/qemu.conf
     content: qemu.conf.j2
