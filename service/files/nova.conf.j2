@@ -136,7 +136,16 @@ memcached_servers = {{ address('memcached', memcached.port) }}
 
 [libvirt]
 virt_type = {{ nova.virt_type }}
+{% if nova.libvirt.tls_enable %}
+# We are using %s in connection_uri as workaround for TLS config with wildcard
+# PKI certificates because they are issued for hostname not IP.
+# We also need to pass domainname so FQDN (not just hostname) is used when
+# initiating TLS connection and TLS can match server certificate to FQDN.
+# FIXME
+connection_uri = "qemu+tls://%s.{{ network_topology["domainname"] }}/system"
+{% else %}
 connection_uri = "qemu+tcp://{{ network_topology["private"]["address"] }}/system"
+{% endif %}
 live_migration_inbound_addr = "{{ network_topology["private"]["address"] }}"
 {% if nova.ceph.enable %}
 images_type = rbd
