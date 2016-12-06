@@ -14,6 +14,8 @@ RUN apt-get -y install --no-install-recommends \
     && apt-get clean \
     && mkdir -p /etc/ceph \
     && chown -R nova: /etc/ceph \
+    && mkdir -p /etc/pki \
+    && chown -R nova: /etc/pki \
     && ln -s /usr/lib/python2.7/dist-packages/rados.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados.so \
     && ln -s /usr/lib/python2.7/dist-packages/rados-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados-0.egg-info \
     && ln -s /usr/lib/python2.7/dist-packages/rbd-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd-0.egg-info \
