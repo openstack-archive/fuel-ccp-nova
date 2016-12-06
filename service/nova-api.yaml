@@ -55,26 +55,49 @@ service:
             - nova-user-create
           type: single
           command: openstack role add --project service --user {{ nova.db.username }} admin
+
+        - name: nova-service-legacy-create
+          dependencies:
+            - keystone
+          type: single
+          command: openstack service create --name nova_legacy --description "Nova Compute Service (Legacy 2.0)" compute_legacy
+        - name: nova-public-legacy-endpoint-create
+          dependencies:
+            - nova-service-legacy-create
+          type: single
+          command: openstack endpoint create --region RegionOne compute_legacy public {{ address('nova-api', nova.api_port, external=True, with_scheme=True) }}/v2/$\(project_id\)s
+        - name: nova-internal-legacy-endpoint-create
+          dependencies:
+            - nova-service-legacy-create
+          type: single
+          command: openstack endpoint create --region RegionOne compute_legacy internal {{ address('nova-api', nova.api_port, with_scheme=True) }}/v2/$\(project_id\)s
+        - name: nova-admin-legacy-endpoint-create
+          dependencies:
+            - nova-service-legacy-create
+          type: single
+          command: openstack endpoint create --region RegionOne compute_legacy admin {{ address('nova-api', nova.api_port, with_scheme=True) }}/v2/$\(project_id\)s
+
         - name: nova-service-create
           dependencies:
             - keystone
           type: single
-          command: openstack service create --name nova --description "OpenStack Compute" compute
+          command: openstack service create --name nova --description "Nova Compute Service" compute
         - name: nova-public-endpoint-create
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute public {{ address('nova-api', nova.api_port, external=True, with_scheme=True) }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute public {{ address('nova-api', nova.api_port, external=True, with_scheme=True) }}/v2.1
         - name: nova-internal-endpoint-create
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute internal {{ address('nova-api', nova.api_port, with_scheme=True) }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute internal {{ address('nova-api', nova.api_port, with_scheme=True) }}/v2.1
         - name: nova-admin-endpoint-create
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute admin {{ address('nova-api', nova.api_port, with_scheme=True) }}/v2/%\(tenant_id\)s
+          command: openstack endpoint create --region RegionOne compute admin {{ address('nova-api', nova.api_port, with_scheme=True) }}/v2.1
+
       daemon:
         command: nova-api --config-file /etc/nova/nova.conf
         files:
