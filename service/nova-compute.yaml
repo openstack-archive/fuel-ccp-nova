@@ -50,9 +50,11 @@ files:
     path: /etc/nova/nova.conf
     content: nova.conf.j2
     perm: "0600"
+  # {% if nova.ceph.enable %}
   ceph-conf:
     path: /etc/ceph/ceph.conf
     content: ceph.conf.j2
   nova-ceph-key:
     path: /etc/ceph/ceph.client.{{ cinder.ceph.username }}.keyring
     content: ceph.client.cinder.keyring.j2
+  # {% endif %}
