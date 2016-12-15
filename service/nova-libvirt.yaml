@@ -23,9 +23,12 @@ service:
         - name: nova
           type: host
           path: /var/lib/nova
-        - name: libvirt
+        - name: libvirt-lib
           type: host
           path: /var/lib/libvirt
+        - name: libvirt-conf
+          type: host
+          path: /etc/libvirt/qemu
         - name: cgroup
           type: host
           path: /sys/fs/cgroup
