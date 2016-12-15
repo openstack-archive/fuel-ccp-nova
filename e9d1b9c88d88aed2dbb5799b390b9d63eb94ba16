@@ -1,0 +1,9 @@
+Code-Review+2: Artur Zarzycki <azarzycki@mirantis.com>
+Code-Review+2: Yuriy Taraday <yorik.sar@gmail.com>
+Workflow+1: Yuriy Taraday <yorik.sar@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Thu, 15 Dec 2016 11:55:24 +0000
+Reviewed-on: https://review.openstack.org/411256
+Project: openstack/fuel-ccp-nova
+Branch: refs/heads/master
