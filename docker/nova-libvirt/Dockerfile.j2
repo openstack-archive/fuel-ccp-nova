@@ -1,6 +1,11 @@
 FROM {{ image_spec("nova-base") }}
 MAINTAINER {{ maintainer }}
 
+RUN apt-get update \
+    && apt-get -y install -t jessie-backports --no-install-recommends \
+        qemu-kvm \
+        qemu-block-extra
+
 RUN apt-get -y install --no-install-recommends \
         ceph-common \
         python-ceph \
@@ -8,8 +13,6 @@ RUN apt-get -y install --no-install-recommends \
         libvirt-bin \
         dmidecode \
         pm-utils \
-        qemu-kvm \
-        qemu-block-extra \
         ebtables \
         xen-utils-4.4 \
     && apt-get clean \
