@@ -52,6 +52,35 @@ service:
         - name: nova-libvirt-secret-set
           command: /opt/ccp/bin/ceph-libvirt-secret-config.sh
           # {% endif %}
+    - name: nova-virtlogd
+      image: nova-libvirt
+      privileged: true
+      probes:
+        readiness: "true"
+        liveness:
+          command: "true"
+          type: "exec"
+      volumes:
+        - name: run
+          type: host
+          path: /run
+        - name: modules
+          type: host
+          path: /lib/modules
+        - name: nova
+          type: host
+          path: /var/lib/nova
+        - name: libvirt-lib
+          type: host
+          path: /var/lib/libvirt
+        - name: libvirt-conf
+          type: host
+          path: /etc/libvirt/qemu
+        - name: cgroup
+          type: host
+          path: /sys/fs/cgroup
+      daemon:
+        command: virtlogd -f /etc/libvirt/virtlogd.conf
 
 files:
   libvirtd.conf:

@@ -1,10 +1,15 @@
 FROM {{ image_spec("nova-base") }}
 MAINTAINER {{ maintainer }}
 
+COPY {{ render('sources.list.debian.j2') }} /etc/apt/sources.list.d/testing.list
+
 RUN apt-get update \
     && apt-get -y install -t jessie-backports --no-install-recommends \
         qemu-kvm \
         qemu-block-extra
+
+RUN apt-get -y install libvirt-daemon -t testing --no-install-recommends \
+        libvirt-bin
 
 RUN apt-get -y install --no-install-recommends \
         ceph-common \
