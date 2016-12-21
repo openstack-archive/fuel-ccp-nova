@@ -72,7 +72,12 @@ api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 {% endif %}
 
 [oslo_messaging_notifications]
+{% if searchlight is defined and searchlight.services.nova %}
+driver = {{ searchlight.notification_driver }}
+notify_on_state_change=vm_and_task_state
+{% else %}
 driver = noop
+{% endif %}
 
 [oslo_messaging_rabbit]
 rabbit_ha_queues = false
