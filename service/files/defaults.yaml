@@ -30,5 +30,5 @@ configs:
 
 sources:
   openstack/nova:
-    git_url: https://github.com/openstack/nova.git
+    git_url: https://git.openstack.org/openstack/nova.git
     git_ref: stable/newton
