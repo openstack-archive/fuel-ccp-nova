@@ -1,12 +1,14 @@
 FROM {{ image_spec("nova-base") }}
 MAINTAINER {{ maintainer }}
 
+COPY {{ render('sources.list.debian.j2') }} /etc/apt/sources.list.d/testing.list
+
 RUN apt-get update \
     && apt-get -y install -t jessie-backports --no-install-recommends \
         qemu-utils \
-    && apt-get -y install --no-install-recommends \
+    && apt-get -y install libvirt-daemon -t testing --no-install-recommends \
         libvirt-dev \
-        python-libvirt \
+    && apt-get -y install --no-install-recommends \
         ceph-common \
         python-ceph \
         python-rados \
@@ -21,8 +23,9 @@ RUN apt-get update \
     && ln -s /usr/lib/python2.7/dist-packages/rbd-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd-0.egg-info \
     && ln -s /usr/lib/python2.7/dist-packages/rbd.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd.so
 
-RUN /var/lib/microservices/venv/bin/pip install --upgrade libvirt-python rtslib-fb && \
-    rm -rf requirements && \
+# Newton constraint has a hard req libvirt-python==2.1.0. Ocata has 2.5.0.
+RUN sed -i 's/libvirt-python===2.1.0/libvirt-python===2.4.0/' /var/lib/microservices/venv/constraints.txt \
+    && /var/lib/microservices/venv/bin/pip install --upgrade libvirt-python rtslib-fb && \
     rm -f /etc/machine-id
 
 ENV PATH $PATH:/lib/udev
