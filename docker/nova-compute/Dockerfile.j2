@@ -1,10 +1,12 @@
 FROM {{ image_spec("nova-base") }}
 MAINTAINER {{ maintainer }}
 
-RUN apt-get -y install --no-install-recommends \
+RUN apt-get update \
+    && apt-get -y install -t jessie-backports --no-install-recommends \
+        qemu-utils \
+    && apt-get -y install --no-install-recommends \
         libvirt-dev \
         python-libvirt \
-        qemu-utils \
         ceph-common \
         python-ceph \
         python-rados \
