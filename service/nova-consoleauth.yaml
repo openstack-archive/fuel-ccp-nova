@@ -4,11 +4,6 @@ service:
   containers:
     - name: nova-consoleauth
       image: nova-consoleauth
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       daemon:
         command: nova-consoleauth --config-file /etc/nova/nova.conf
         files:

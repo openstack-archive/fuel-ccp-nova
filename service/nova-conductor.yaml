@@ -4,11 +4,6 @@ service:
   containers:
     - name: nova-conductor
       image: nova-conductor
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       daemon:
         command: nova-conductor --config-file /etc/nova/nova.conf
         files:

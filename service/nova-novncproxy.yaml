@@ -6,11 +6,6 @@ service:
   containers:
     - name: nova-novncproxy
       image: nova-novncproxy
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       daemon:
         command: nova-novncproxy --config-file /etc/nova/nova.conf
         files:

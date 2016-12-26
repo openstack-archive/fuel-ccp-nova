@@ -8,11 +8,6 @@ service:
     - name: nova-api
       image: nova-api
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       pre:
         - name: nova-db-create
           type: single

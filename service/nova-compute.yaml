@@ -7,11 +7,6 @@ service:
     - name: nova-compute
       image: nova-compute
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       volumes:
         - name: run
           type: host

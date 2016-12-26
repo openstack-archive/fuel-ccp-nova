@@ -8,11 +8,6 @@ service:
     - name: nova-libvirt
       image: nova-libvirt
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       volumes:
         - name: run
           type: host
@@ -62,11 +57,6 @@ service:
     - name: nova-virtlogd
       image: nova-libvirt
       privileged: true
-      probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
       volumes:
         - name: run
           type: host
