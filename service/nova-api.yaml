@@ -97,12 +97,14 @@ service:
         command: nova-api --config-file /etc/nova/nova.conf
         files:
           - nova.conf
+      # {% if nova.bootstrap.enable %}
       post:
-        - name: nova-create-default-flavors
+        - name: nova-bootstrap-flavors
           type: single
-          command: /opt/ccp/bin/create-default-flavors.sh
+          command: /opt/ccp/bin/create-flavors.sh
           files:
-            - create-default-flavors.sh
+            - create-flavors.sh
+      # {% endif %}
 
 files:
   nova.conf:
@@ -110,7 +112,7 @@ files:
     content: nova.conf.j2
     perm: "0600"
 
-  create-default-flavors.sh:
-    path: /opt/ccp/bin/create-default-flavors.sh
-    content: create-default-flavors.sh.j2
+  create-flavors.sh:
+    path: /opt/ccp/bin/create-flavors.sh
+    content: create-flavors.sh.j2
     perm: "0700"
