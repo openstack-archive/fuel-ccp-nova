@@ -1,0 +1,21 @@
+#!/bin/bash
+
+name=$1
+id=$2
+ram=$3
+disk=$4
+vcpus=$5
+
+set -ex
+
+export OS_IDENTITY_API_VERSION=3
+export OS_INTERFACE="internal"
+export OS_PROJECT_DOMAIN_NAME=default
+export OS_USER_DOMAIN_NAME=default
+export OS_PASSWORD={{ openstack.user_password }}
+export OS_USERNAME={{ openstack.user_name }}
+export OS_PROJECT_NAME={{ openstack.project_name }}
+export OS_AUTH_URL="{{ address('keystone', keystone.admin_port, with_scheme=True) }}/v3"
+
+openstack flavor show $name || openstack --os-region-name=RegionOne \
+    flavor create --id $id --ram $ram --disk $disk --vcpus $vcpus $name
