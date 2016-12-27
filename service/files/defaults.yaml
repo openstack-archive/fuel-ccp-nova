@@ -27,6 +27,9 @@ configs:
     ceph:
       enable: false
       pool_name: "vms"
+    bootstrap:
+      enable: false
+      flavors: []
 
 sources:
   openstack/nova:

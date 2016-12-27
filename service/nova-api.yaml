@@ -85,6 +85,15 @@ service:
           command: /opt/ccp/bin/create-default-flavors.sh
           files:
             - create-default-flavors.sh
+        # {% if nova.bootstrap.enable %}
+        - name: nova-create-custom-flavors
+          dependencies:
+            - nova-create-default-flavors
+          type: single
+          command: /opt/ccp/bin/create-default-flavors.sh run_custom
+          files:
+            - create-default-flavors.sh
+        # {% endif %}
 
 files:
   nova.conf:
