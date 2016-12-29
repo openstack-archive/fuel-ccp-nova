@@ -45,6 +45,10 @@ scheduler_default_filters = {{ nova.scheduler.enabled_filters | join(",") }}
 # Though my_ip is not used directly, lots of other variables use $my_ip
 my_ip = {{ network_topology["private"]["address"] }}
 
+{% if ingress.enabled %}
+secure_proxy_ssl_header = HTTP_X_FORWARDED_PROTO
+{{ endif }}
+
 {% if nova.console == 'novnc' %}
 [vnc]
 novncproxy_host = {{ network_topology["private"]["address"] }}
