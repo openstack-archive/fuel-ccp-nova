@@ -47,7 +47,7 @@ my_ip = {{ network_topology["private"]["address"] }}
 
 {% if ingress.enabled %}
 secure_proxy_ssl_header = HTTP_X_FORWARDED_PROTO
-{{ endif }}
+{% endif %}
 
 {% if nova.console == 'novnc' %}
 [vnc]
