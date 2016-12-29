@@ -10,8 +10,6 @@ osapi_compute_listen_port = {{ nova.api_port.cont }}
 metadata_listen = {{ network_topology["private"]["address"] }}
 metadata_listen_port = {{ nova.metadata.port.cont }}
 
-transport_url=rabbit://{{ rabbitmq.user }}:{{ rabbitmq.password }}@{{ address('rabbitmq') }}
-
 use_neutron = true
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 scheduler_max_attempts = 10
@@ -175,3 +173,7 @@ compute = auto
 
 [wsgi]
 api_paste_config = /etc/nova/api-paste.ini
+
+{# messaging macros templates #}
+{{ oslomessaging[messaging.backend.notifications]('notifications_config') }}
+{{ oslomessaging[messaging.backend.rpc]('rpc_config') }}

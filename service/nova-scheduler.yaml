@@ -10,6 +10,8 @@ service:
           - nova.conf
         dependencies:
           - nova-db-migrations
+          - "{{ messaging.dependencies[messaging.backend.rpc] }}"
+          - "{{ messaging.dependencies[messaging.backend.notifications] }}"
 files:
   nova.conf:
     path: /etc/nova/nova.conf
