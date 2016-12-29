@@ -33,6 +33,8 @@ service:
           - nova-db-migrations
           - nova-libvirt:local
           - nova-conductor
+          - "{{ messaging.dependencies[messaging.backend.rpc] }}"
+          - "{{ messaging.dependencies[messaging.backend.notifications] }}"
         files:
           - nova.conf
           # {% if nova.libvirt.tls_enable %}
