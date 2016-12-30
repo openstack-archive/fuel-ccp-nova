@@ -16,7 +16,7 @@ service:
           - nova.conf
           - nova-ironic.conf
         dependencies:
-          - nova-db-migrations
+          - nova-db-create-and-sync
           - ironic-user-create
 files:
   nova.conf:

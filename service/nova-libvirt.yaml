@@ -33,7 +33,7 @@ service:
       daemon:
         command: libvirtd --listen
         dependencies:
-          - nova-db-migrations
+          - nova-db-create-and-sync
         files:
           - libvirtd.conf
           - nova-libvirt-bootstrap.sh

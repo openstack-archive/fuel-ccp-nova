@@ -11,7 +11,7 @@ service:
         files:
           - nova.conf
         dependencies:
-          - nova-db-migrations
+          - nova-db-create-and-sync
 files:
   nova.conf:
     path: /etc/nova/nova.conf

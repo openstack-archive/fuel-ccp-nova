@@ -9,35 +9,20 @@ service:
       image: nova-api
       privileged: true
       pre:
-        - name: nova-db-create
+        - name: nova-db-create-and-sync
           type: single
-          command: mysql -v -u root -p{{ db.root_password }} -h {{ address(service.database) }} -e 'create database `{{ nova.db.name }}`;
+          command: mysql -v -u root -p{{ db.root_password }} -h {{ address(service.database) }} -e \
+                   'drop database if exists `{{ nova.db.name }}`;
+                   drop database if exists `{{ nova.db.api_name }}`;
+                   create database `{{ nova.db.name }}`;
                    create database `{{ nova.db.api_name }}`;
                    grant all privileges on `{{ nova.db.name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}";
-                   grant all privileges on `{{ nova.db.api_name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"'
+                   grant all privileges on `{{ nova.db.api_name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"' && \
+                   nova-manage db sync && \
+                   nova-manage api_db sync && \
+                   nova-manage db online_data_migrations
           dependencies:
             - {{ service.database }}
-          files:
-            - nova.conf
-        - name: nova-db-sync
-          type: single
-          command: nova-manage db sync
-          dependencies:
-            - nova-db-create
-          files:
-            - nova.conf
-        - name: nova-api-db-sync
-          type: single
-          command: nova-manage api_db sync
-          dependencies:
-            - nova-db-sync
-          files:
-            - nova.conf
-        - name: nova-db-migrations
-          type: single
-          command: nova-manage db online_data_migrations
-          dependencies:
-            - nova-api-db-sync
           files:
             - nova.conf
         - name: nova-user-create

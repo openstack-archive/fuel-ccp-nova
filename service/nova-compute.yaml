@@ -30,7 +30,7 @@ service:
       daemon:
         command: nova-compute --config-file /etc/nova/nova.conf
         dependencies:
-          - nova-db-migrations
+          - nova-db-create-and-sync
           - nova-libvirt:local
           - nova-conductor
         files:
