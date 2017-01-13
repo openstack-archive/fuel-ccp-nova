@@ -5,7 +5,7 @@ service:
   hostNetwork: true
   hostPID: true
   containers:
-    - name: nova-libvirt
+    - name: nova-libvirt-container
       image: nova-libvirt
       privileged: true
       volumes:
