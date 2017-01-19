@@ -4,6 +4,9 @@ service:
   ports:
     - {{ nova.api_port }}
     - {{ nova.metadata.port }}
+  annotations:
+    service:
+      prometheus.io/probe: "true"
   containers:
     - name: nova-api
       image: nova-api
