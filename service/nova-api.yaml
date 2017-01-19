@@ -1,9 +1,12 @@
-dsl_version: 0.1.0
+dsl_version: 0.4.0
 service:
   name: nova-api
   ports:
     - {{ nova.api_port }}
     - {{ nova.metadata.port }}
+  annotations:
+    service:
+      prometheus.io/probe: "true"
   containers:
     - name: nova-api
       image: nova-api
