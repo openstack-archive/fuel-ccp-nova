@@ -3,7 +3,12 @@ MAINTAINER {{ maintainer }}
 
 COPY {{ render('sources.list.debian.j2') }} /etc/apt/sources.list.d/testing.list
 
+# qemu-system-x86 depends on libgtk-3-0 libvte-2.91-0 that are provided
+# by testing repository and doesn't exist in jessie-backports, so we need
+# to install them before installing qemu-kvm from jessie-backports
+
 RUN apt-get update \
+    && apt-get -y install libgtk-3-0 libvte-2.91-0 \
     && apt-get -y install -t jessie-backports --no-install-recommends \
         qemu-kvm \
         qemu-block-extra \
