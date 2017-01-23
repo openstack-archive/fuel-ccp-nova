@@ -25,7 +25,7 @@ RUN apt-get update \
     && ln -s /usr/lib/python2.7/dist-packages/rbd.x86_64-linux-gnu.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd.x86_64-linux-gnu.so \
     && sed -i 's/libvirt-python.*/\#libvirt-python==3.0.0/' /var/lib/microservices/venv/constraints.txt \
     && pip install --upgrade https://libvirt.org/sources/python/libvirt-python-3.0.0.tar.gz \
-    && /var/lib/microservices/venv/bin/pip install --upgrade rtslib-fb \
+    && /var/lib/microservices/venv/bin/pip install rtslib-fb \
     && rm -f /etc/machine-id \
     && apt-get -y purge python-dev
 

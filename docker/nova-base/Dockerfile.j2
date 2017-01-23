@@ -18,7 +18,7 @@ RUN apt-key adv --recv-keys --keyserver {{ url.ceph.debian.keyserver }} \
 
 RUN useradd --user-group --create-home --home-dir /var/lib/nova nova \
     && chmod 755 /var/lib/nova \
-    && /var/lib/microservices/venv/bin/pip install --upgrade /nova \
+    && /var/lib/microservices/venv/bin/pip install /nova \
     && mkdir -p /etc/nova /var/lib/nova /var/log/nova \
     && cp -r /nova/etc/nova/* /etc/nova/ \
     && chown -R nova: /etc/nova /var/lib/nova /var/log/nova \
