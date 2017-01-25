@@ -16,6 +16,10 @@ RUN apt-key adv --recv-keys --keyserver {{ url.ceph.debian.keyserver }} \
 
 {{ copy_sources("openstack/nova", "/nova") }}
 
+# Pull fix for https://bugs.launchpad.net/nova/+bug/1649527
+RUN cd /nova \
+    && curl -s https://review.openstack.org/changes/411936/revisions/847952927c60ed0577bc835adf607ed7b8f15240/patch?download | base64 -d | patch -p1
+
 RUN useradd --user-group --create-home --home-dir /var/lib/nova nova \
     && chmod 755 /var/lib/nova \
     && /var/lib/microservices/venv/bin/pip install --upgrade /nova \
