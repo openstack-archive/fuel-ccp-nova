@@ -10,8 +10,6 @@ osapi_compute_listen_port = {{ nova.api_port.cont }}
 metadata_listen = {{ network_topology["private"]["address"] }}
 metadata_listen_port = {{ nova.metadata.port.cont }}
 
-transport_url=rabbit://{{ rabbitmq.user }}:{{ rabbitmq.password }}@{{ address('rabbitmq') }}
-
 use_neutron = true
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 scheduler_max_attempts = 10
@@ -77,17 +75,6 @@ admin_url = {{ openstack_auth_url }}
 admin_tenant_name = service
 api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 {% endif %}
-
-[oslo_messaging_notifications]
-{% if searchlight is defined and searchlight.services.nova %}
-driver = {{ searchlight.notification_driver }}
-notify_on_state_change = vm_and_task_state
-{% else %}
-driver = noop
-{% endif %}
-
-[oslo_messaging_rabbit]
-rabbit_ha_queues = false
 
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
@@ -179,3 +166,13 @@ compute = auto
 
 [wsgi]
 api_paste_config = /etc/nova/api-paste.ini
+
+[oslo_messaging_notifications]
+{% if searchlight is defined and searchlight.services.nova %}
+driver = {{ searchlight.notification_driver }}
+notify_on_state_change = vm_and_task_state
+{% endif %}
+
+{# messaging macros templates #}
+{{ oslo_messaging[messaging.backend.notifications]('notifications_config') }}
+{{ oslo_messaging[messaging.backend.rpc]('rpc_config') }}
