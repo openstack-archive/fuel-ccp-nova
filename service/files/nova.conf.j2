@@ -4,10 +4,14 @@ debug = {{ nova.logging_debug }}
 
 state_path = /var/lib/nova
 
+{% if security.tls.enabled %}
+osapi_compute_listen=127.0.0.1
+metadata_listen = 127.0.0.1
+{% else %}
 osapi_compute_listen = {{ network_topology["private"]["address"] }}
-osapi_compute_listen_port = {{ nova.api_port.cont }}
-
 metadata_listen = {{ network_topology["private"]["address"] }}
+{% endif %}
+osapi_compute_listen_port = {{ nova.api_port.cont }}
 metadata_listen_port = {{ nova.metadata.port.cont }}
 
 use_neutron = true
@@ -49,7 +53,11 @@ secure_proxy_ssl_header = HTTP_X_FORWARDED_PROTO
 
 {% if nova.console == 'novnc' %}
 [vnc]
+{% if security.tls.enabled %}
+novncproxy_host = 127.0.0.1
+{% else %}
 novncproxy_host = {{ network_topology["private"]["address"] }}
+{% endif %}
 novncproxy_port = {{ nova.novncproxy_port.cont }}
 vncserver_listen = {{ network_topology["private"]["address"] }}
 vncserver_proxyclient_address = {{ network_topology["private"]["address"] }}
@@ -74,6 +82,13 @@ admin_password = {{ ironic_keystone_password }}
 admin_url = {{ openstack_auth_url }}
 admin_tenant_name = service
 api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
+{% endif %}
+
+[oslo_messaging_rabbit]
+rabbit_ha_queues = false
+{% if security.tls.enabled %}
+rabbit_use_ssl = True
+kombu_ssl_ca_certs = /opt/ccp/etc/tls/ca.pem
 {% endif %}
 
 [oslo_concurrency]
@@ -124,6 +139,7 @@ auth_version = v3
 auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True) }}/v3
 auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}/v3
 auth_type = password
+cafile = /opt/ccp/etc/tls/ca.pem
 project_domain_id = default
 user_domain_id = default
 project_name = service
