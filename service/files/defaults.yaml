@@ -8,6 +8,10 @@ configs:
     api_port:
       cont: 8774
       ingress: compute
+    tls:
+      api_port: 9774
+      novncproxy_port: 7080
+      metadata_port: 9775
     novncproxy_port:
       cont: 6080
       ingress: console
