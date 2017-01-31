@@ -1,0 +1,14 @@
+   server {
+           listen {{ network_topology["private"]["address"] }}:{{ nova.novncproxy_port.cont }};
+           ssl on;
+           ssl_certificate /opt/ccp/etc/tls/server-cert.pem;
+           ssl_certificate_key /opt/ccp/etc/tls/server-key.pem;
+
+           location / {
+                   proxy_pass http://novncproxy;
+                   proxy_set_header Host $host:$server_port;
+                   proxy_set_header X-Real-IP $remote_addr;
+                   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                   proxy_set_header X-Forwarded-Proto $scheme;
+           }
+   }
