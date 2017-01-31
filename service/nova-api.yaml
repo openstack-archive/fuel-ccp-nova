@@ -63,17 +63,17 @@ service:
           dependencies:
             - nova-service-legacy-create
           type: single
-          command: openstack endpoint create --region RegionOne compute_legacy public {{ address('nova-api', nova.api_port, external=True, with_scheme=True) }}/v2/$\(project_id\)s
+          command: openstack endpoint create --region RegionOne compute_legacy public {{ address('nova-api', nova.api_port, external=True, with_scheme=True, tls=True) }}/v2/$\(project_id\)s
         - name: nova-internal-legacy-endpoint-create
           dependencies:
             - nova-service-legacy-create
           type: single
-          command: openstack endpoint create --region RegionOne compute_legacy internal {{ address('nova-api', nova.api_port, with_scheme=True) }}/v2/$\(project_id\)s
+          command: openstack endpoint create --region RegionOne compute_legacy internal {{ address('nova-api', nova.api_port, with_scheme=True, tls=True) }}/v2/$\(project_id\)s
         - name: nova-admin-legacy-endpoint-create
           dependencies:
             - nova-service-legacy-create
           type: single
-          command: openstack endpoint create --region RegionOne compute_legacy admin {{ address('nova-api', nova.api_port, with_scheme=True) }}/v2/$\(project_id\)s
+          command: openstack endpoint create --region RegionOne compute_legacy admin {{ address('nova-api', nova.api_port, with_scheme=True, tls=True) }}/v2/$\(project_id\)s
 
         - name: nova-service-create
           dependencies:
@@ -84,12 +84,12 @@ service:
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute public {{ address('nova-api', nova.api_port, external=True, with_scheme=True) }}/v2.1
+          command: openstack endpoint create --region RegionOne compute public {{ address('nova-api', nova.api_port, external=True, with_scheme=True, tls=True) }}/v2.1
         - name: nova-internal-endpoint-create
           dependencies:
             - nova-service-create
           type: single
-          command: openstack endpoint create --region RegionOne compute internal {{ address('nova-api', nova.api_port, with_scheme=True) }}/v2.1
+          command: openstack endpoint create --region RegionOne compute internal {{ address('nova-api', nova.api_port, with_scheme=True, tls=True) }}/v2.1
         - name: nova-admin-endpoint-create
           dependencies:
             - nova-service-create
@@ -100,6 +100,7 @@ service:
         command: nova-api --config-file /etc/nova/nova.conf
         files:
           - nova.conf
+          - ca_certt
       # {% if nova.bootstrap.enable %}
       post:
       # {% for flavor in nova.bootstrap.flavors %}
@@ -108,8 +109,21 @@ service:
           command: /opt/ccp/bin/create-flavor.sh {{ flavor.name }} {{ flavor.id }} {{ flavor.ram }} {{ flavor.disk }} {{ flavor.vcpus }}
           files:
             - create-flavor.sh
+            - ca_certt
       # {% endfor %}
       # {% endif %}
+    {% if security.tls.enabled %}
+    - name: nginx
+      image: nginx
+      daemon:
+        files:
+          - nginx
+          - ca_cert
+          - server-cert
+          - server-key
+        command: nginx
+    {% endif %}
+
 
 files:
   nova.conf:
@@ -121,3 +135,26 @@ files:
     path: /opt/ccp/bin/create-flavor.sh
     content: create-flavor.sh.j2
     perm: "0700"
+  {% if security.tls.enabled %}
+  nginx:
+    path: /etc/nginx/nginx.conf
+    content: nginx-nova-api.conf.j2
+    perm: "0400"
+  ca_cert:
+    path: /etc/nginx/ssl/certs/ca-cert.pem
+    content: ca-cert.pem.j2
+    perm: "0400"
+  server-cert:
+    path: /etc/nginx/ssl/certs/server-cert.pem
+    content: server-cert.pem.j2
+    perm: "0400"
+  server-key:
+    path: /etc/nginx/ssl/private/server-key.pem
+    content: server-key.pem.j2
+    perm: "0400"
+  ca_certt:
+    path: /tmp/ca-cert.pem
+    content: ca-cert.pem.j2
+    perm: "0400"
+  {% endif %}
+

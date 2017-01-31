@@ -4,11 +4,19 @@ debug = {{ nova.logging_debug }}
 
 state_path = /var/lib/nova
 
+{% if security.tls.enabled %}
+osapi_compute_listen=127.0.0.1
+osapi_compute_listen_port = {{ nova.tls.api_port}}
+secure_proxy_ssl_header = HTTP_X_FORWARDED_PROTO
+{% else %}
 osapi_compute_listen = {{ network_topology["private"]["address"] }}
 osapi_compute_listen_port = {{ nova.api_port.cont }}
+{% endif %}
 
 metadata_listen = {{ network_topology["private"]["address"] }}
 metadata_listen_port = {{ nova.metadata.port.cont }}
+
+transport_url=rabbit://{{ rabbitmq.user }}:{{ rabbitmq.password }}@{{ address('rabbitmq') }}
 
 use_neutron = true
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
@@ -76,6 +84,17 @@ admin_tenant_name = service
 api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
 {% endif %}
 
+[oslo_messaging_notifications]
+{% if searchlight is defined and searchlight.services.nova %}
+driver = {{ searchlight.notification_driver }}
+notify_on_state_change = vm_and_task_state
+{% else %}
+driver = noop
+{% endif %}
+
+[oslo_messaging_rabbit]
+rabbit_ha_queues = false
+
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 
@@ -121,9 +140,10 @@ memcache_servers = {{ address('memcached', memcached.port) }}
 
 [keystone_authtoken]
 auth_version = v3
-auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True) }}/v3
-auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}/v3
+auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True,  tls=True) }}/v3
+auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True,  tls=True) }}/v3
 auth_type = password
+cafile = /tmp/ca-cert.pem
 project_domain_id = default
 user_domain_id = default
 project_name = service

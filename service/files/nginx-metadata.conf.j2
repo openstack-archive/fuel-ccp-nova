@@ -1,0 +1,28 @@
+{% if security.tls.enabled %}
+daemon off;
+
+events {
+}
+
+http {
+   upstream nova_metadata {
+       server 127.0.0.1:{{ nova.tls.metadata_port }};
+   }
+   
+   server {
+           listen {{ nova.metadata_port.cont }};
+           ssl on;
+           ssl_certificate /etc/nginx/ssl/certs/server-cert.pem;
+           ssl_certificate_key /etc/nginx/ssl/private/server-key.pem;
+           ssl_trusted_certificate /etc/nginx/ssl/certs/ca-cert.pem;
+
+           location / {
+                   proxy_pass http://nova_metadata;
+                   proxy_set_header Host $host:$server_port;
+                   proxy_set_header X-Real-IP $remote_addr;
+                   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                   proxy_set_header X-Forwarded-Proto $scheme;
+           }
+   }
+}
+{% endif %}
