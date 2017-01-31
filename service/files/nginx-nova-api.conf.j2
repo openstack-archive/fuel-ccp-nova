@@ -1,0 +1,20 @@
+   server {
+           listen {{ network_topology["private"]["address"] }}:{{ nova.api_port.cont }};
+           include common/ssl.conf;
+
+           location / {
+                   proxy_pass http://nova_api;
+                   include common/proxy-headers.conf;
+           }
+   }
+   server {
+           listen {{ network_topology["private"]["address"] }}:{{ nova.metadata.port.cont }};
+           include common/ssl.conf;
+
+           location / {
+                   proxy_pass http://nova_metadata;
+                   include common/proxy-headers.conf;
+           }
+   }
+
+
