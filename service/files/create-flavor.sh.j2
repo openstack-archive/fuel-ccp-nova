@@ -16,6 +16,7 @@ export OS_PASSWORD={{ openstack.user_password }}
 export OS_USERNAME={{ openstack.user_name }}
 export OS_PROJECT_NAME={{ openstack.project_name }}
 export OS_AUTH_URL="{{ address('keystone', keystone.admin_port, with_scheme=True) }}/v3"
+export OS_CACERT="/opt/ccp/etc/tls/ca.pem"
 
 openstack flavor show $name || openstack --os-region-name=RegionOne \
     flavor create --id $id --ram $ram --disk $disk --vcpus $vcpus $name
