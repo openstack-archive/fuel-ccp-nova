@@ -25,6 +25,10 @@ RUN useradd --user-group --create-home --home-dir /var/lib/nova nova \
     && sed -i 's|^exec_dirs.*|exec_dirs=/var/lib/microservices/venv/bin,/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin|g' /etc/nova/rootwrap.conf
 
 COPY nova_sudoers /etc/sudoers.d/nova_sudoers
+{% if security.tls.enabled %}
+COPY {{ render('ca-cert.pem.j2') }} /var/lib/microservices/venv/local/lib/python2.7/site-packages/requests/cacert.pem
+{% endif %}
+
 RUN chmod 750 /etc/sudoers.d \
     && chmod 440 /etc/sudoers.d/nova_sudoers \
     && usermod -a -G microservices nova
