@@ -4,10 +4,14 @@ debug = {{ nova.logging_debug }}
 
 state_path = /var/lib/nova
 
+{% if nova.tls.enabled %}
+osapi_compute_listen=127.0.0.1
+metadata_listen = 127.0.0.1
+{% else %}
 osapi_compute_listen = {{ network_topology["private"]["address"] }}
-osapi_compute_listen_port = {{ nova.api_port.cont }}
-
 metadata_listen = {{ network_topology["private"]["address"] }}
+{% endif %}
+osapi_compute_listen_port = {{ nova.api_port.cont }}
 metadata_listen_port = {{ nova.metadata.port.cont }}
 
 use_neutron = true
@@ -49,7 +53,11 @@ secure_proxy_ssl_header = HTTP_X_FORWARDED_PROTO
 
 {% if nova.console == 'novnc' %}
 [vnc]
+{% if nova.tls.enabled %}
+novncproxy_host = 127.0.0.1
+{% else %}
 novncproxy_host = {{ network_topology["private"]["address"] }}
+{% endif %}
 novncproxy_port = {{ nova.novncproxy_port.cont }}
 vncserver_listen = {{ network_topology["private"]["address"] }}
 vncserver_proxyclient_address = {{ network_topology["private"]["address"] }}
@@ -88,8 +96,16 @@ api_endpoint = {{ address('ironic-api', ironic.api_port, with_sceme=True) }}/v1
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 
+{% if glance.tls.enabled %}
+[ssl]
+ca_file = /opt/ccp/etc/tls/ca.pem
+{% endif %}
+
 [glance]
-api_servers = {{ address('glance-api', glance.api_port) }}
+{% if glance.tls.enabled %}
+protocol = https
+{% endif %}
+api_servers = {{ address('glance-api', glance.api_port, with_scheme=True) }}
 # We need to do N number of retries here, N = number of glance-api daemons running
 # FIXME
 num_retries = 1
@@ -98,6 +114,10 @@ num_retries = 1
 catalog_info = volumev2:cinder:internalURL
 
 [neutron]
+{% if neutron.tls.enabled %}
+protocol = https
+cafile = /opt/ccp/etc/tls/ca.pem
+{% endif %}
 url = {{ address('neutron-server', neutron.server_port, with_scheme=True) }}
 auth_strategy = keystone
 metadata_proxy_shared_secret = {{ nova.metadata.secret }}
@@ -163,6 +183,12 @@ compute = auto
 
 [wsgi]
 api_paste_config = /etc/nova/api-paste.ini
+
+{% if nova.tls.enabled %}
+[oslo_middleware]
+enable_proxy_headers_parsing = true
+{% endif %}
+
 
 [oslo_messaging_notifications]
 {% if searchlight is defined and searchlight.services.nova %}
