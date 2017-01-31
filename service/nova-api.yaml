@@ -103,6 +103,9 @@ service:
         command: nova-api --config-file /etc/nova/nova.conf
         files:
           - nova.conf
+          # {% if nova.tls.enabled %}
+          - ca-cert
+          # {% endif %}
       # {% if nova.bootstrap.enable %}
       post:
       # {% for flavor in nova.bootstrap.flavors %}
@@ -111,8 +114,24 @@ service:
           command: /opt/ccp/bin/create-flavor.sh {{ flavor.name }} {{ flavor.id }} {{ flavor.ram }} {{ flavor.disk }} {{ flavor.vcpus }}
           files:
             - create-flavor.sh
+    # {% if nova.tls.enabled %}
+            - server-cert
+            - server-key
+            - ca-cert
+    # {% endif %}
       # {% endfor %}
       # {% endif %}
+    # {% if nova.tls.enabled %}
+    - name: nginx-nova-api
+      image: nginx
+      daemon:
+        files:
+          - upstreams
+          - servers
+          - server-cert
+          - server-key
+        command: nginx
+    # {% endif %}
 
 files:
   nova.conf:
@@ -124,3 +143,25 @@ files:
     path: /opt/ccp/bin/create-flavor.sh
     content: create-flavor.sh.j2
     perm: "0700"
+  # {% if nova.tls.enabled %}
+  servers:
+    path: /etc/nginx/conf.d/servers.conf
+    content: nginx-nova-api.conf.j2
+    perm: "0400"
+  upstreams:
+    path: /etc/nginx/conf.d/upstreams.conf
+    content: upstreams.conf.j2
+    perm: "0400"
+  server-cert:
+    path: /opt/ccp/etc/tls/server-cert.pem
+    content: server-cert.pem.j2
+    perm: "0400"
+  server-key:
+    path: /opt/ccp/etc/tls/server-key.pem
+    content: server-key.pem.j2
+    perm: "0400"
+  ca-cert:
+    path: /opt/ccp/etc/tls/ca.pem
+    content: ca-cert.pem.j2
+    perm: "0400"
+  # {% endif %}

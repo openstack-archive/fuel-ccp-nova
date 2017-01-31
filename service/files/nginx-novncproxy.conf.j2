@@ -1,0 +1,9 @@
+   server {
+           listen {{ network_topology["private"]["address"] }}:{{ nova.novncproxy_port.cont }} ssl;
+           include common/ssl.conf;
+
+           location / {
+                   proxy_pass http://novncproxy;
+                   include common/proxy-headers.conf;
+           }
+   }
