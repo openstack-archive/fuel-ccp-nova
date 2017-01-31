@@ -1,0 +1,42 @@
+   server {
+           listen {{ network_topology["private"]["address"] }}:{{ nova.api_port.cont }};
+           ssl on;
+           ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+           ssl_session_cache shared:SSL:10m;
+           ssl_ciphers {{ security.tls.ciphers }};
+           ssl_prefer_server_ciphers on;
+           ssl_certificate /etc/nginx/ssl/certs/server-cert.pem;
+           ssl_certificate_key /etc/nginx/ssl/private/server-key.pem;
+           # allows to upload images without being cut off at some low size
+           client_max_body_size 0;
+
+           location / {
+                   proxy_pass http://nova_api;
+                   proxy_set_header Host $host:$server_port;
+                   proxy_set_header X-Real-IP $remote_addr;
+                   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                   proxy_set_header X-Forwarded-Proto $scheme;
+           }
+   }
+   server {
+           listen {{ network_topology["private"]["address"] }}:{{ nova.metadata.port.cont }};
+           ssl on;
+           ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+           ssl_session_cache shared:SSL:10m;
+           ssl_ciphers {{ security.tls.ciphers }};
+           ssl_prefer_server_ciphers on;
+           ssl_certificate /etc/nginx/ssl/certs/server-cert.pem;
+           ssl_certificate_key /etc/nginx/ssl/private/server-key.pem;
+           # allows to upload images without being cut off at some low size
+           client_max_body_size 0;
+
+           location / {
+                   proxy_pass http://nova_metadata;
+                   proxy_set_header Host $host:$server_port;
+                   proxy_set_header X-Real-IP $remote_addr;
+                   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                   proxy_set_header X-Forwarded-Proto $scheme;
+           }
+   }
+
+

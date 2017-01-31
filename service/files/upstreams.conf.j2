@@ -1,0 +1,13 @@
+upstream novncproxy {
+    server 127.0.0.1:{{ nova.novncproxy_port.cont }};
+}
+
+upstream nova_api {
+   server 127.0.0.1:{{ nova.api_port.cont }};
+}
+
+upstream nova_metadata {
+   server 127.0.0.1:{{ nova.metadata.port.cont }};
+}
+
+
