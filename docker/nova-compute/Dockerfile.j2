@@ -2,6 +2,7 @@ FROM {{ image_spec("nova-base") }}
 MAINTAINER {{ maintainer }}
 
 COPY {{ render('sources.list.debian.j2') }} /etc/apt/sources.list.d/testing.list
+COPY {{ render('backports.sources.list.debian.j2') }} /etc/apt/sources.list.d/backports.list
 
 RUN apt-get update \
     && apt-get -y install -t jessie-backports --no-install-recommends \
