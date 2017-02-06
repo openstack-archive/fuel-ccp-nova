@@ -24,8 +24,9 @@ RUN apt-get update \
     && ln -s /usr/lib/python2.7/dist-packages/rbd.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd.so
 
 # We have to set libvirt-python version to 2.4.0, to match the libvirt from testing repo.
-RUN sed -i 's/libvirt-python.*/libvirt-python==2.4.0/' /var/lib/microservices/venv/constraints.txt \
-    && /var/lib/microservices/venv/bin/pip install --upgrade libvirt-python rtslib-fb && \
+RUN sed -i 's/libvirt-python.*/\#libvirt-python==3.0.0/' /var/lib/microservices/venv/constraints.txt && \
+    pip install --upgrade https://libvirt.org/sources/python/libvirt-python-3.0.0.tar.gz && \
+    /var/lib/microservices/venv/bin/pip install --upgrade rtslib-fb && \
     rm -f /etc/machine-id
 
 ENV PATH $PATH:/lib/udev
