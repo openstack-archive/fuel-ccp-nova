@@ -14,10 +14,14 @@ service:
       pre:
         - name: nova-db-create
           type: single
-          command: mysql -v -u root -p{{ db.root_password }} -h {{ address(service.database) }} -e 'create database `{{ nova.db.name }}`;
+          command: mysql -v -u root -p{{ db.root_password }} -h {{ address(service.database) }} -e "create database `{{ nova.db.name }}`;
                    create database `{{ nova.db.api_name }}`;
-                   grant all privileges on `{{ nova.db.name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}";
-                   grant all privileges on `{{ nova.db.api_name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"'
+                   create user '{{ nova.db.username }}'@'%' identified by '{{ nova.db.password }}'
+                   {% if percona.tls.enabled and security.tls.enabled %} require ssl {% endif %};
+                   grant all privileges on `{{ nova.db.name }}`.* to '{{ nova.db.username }}'@'%' identified by '{{ nova.db.password }}'
+                   {% if percona.tls.enabled and security.tls.enabled %} require ssl {% endif %};
+                   grant all privileges on `{{ nova.db.api_name }}`.* to '{{ nova.db.username }}'@'%' identified by '{{ nova.db.password }}'
+                   {% if percona.tls.enabled and security.tls.enabled %} require ssl {% endif %};"
           dependencies:
             - {{ service.database }}
           files:
