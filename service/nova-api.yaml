@@ -45,15 +45,14 @@ service:
             - nova.conf
         - name: nova-user-create
           type: single
-          command: openstack user create --project service --password {{ nova.db.password }} {{ nova.db.username }}
+          command: openstack user create --domain {{ service_account.domain }} --password {{ nova.password }} {{ nova.username }}
           dependencies:
-            - keystone-create-project
+            - keystone-create-domain
         - name: nova-role-add
           dependencies:
             - nova-user-create
           type: single
-          command: openstack role add --project service --user {{ nova.db.username }} admin
-
+          command: openstack role add --domain {{ service_account.domain }} --user {{ nova.username }} admin
         - name: nova-service-legacy-create
           dependencies:
             - keystone
