@@ -119,19 +119,7 @@ enabled = true
 # FIXME
 memcache_servers = {{ address('memcached', memcached.port) }}
 
-[keystone_authtoken]
-auth_version = v3
-auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True) }}/v3
-auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}/v3
-auth_type = password
-project_domain_id = default
-user_domain_id = default
-project_name = service
-username = {{ nova.db.username }}
-password = {{ nova.db.password }}
-# Here we need to pass an array of memcached daemons, for now we just use DNS
-#FIXME
-memcached_servers = {{ address('memcached', memcached.port) }}
+{{ keystone_authtoken(nova.user, nova.password) }}
 
 [libvirt]
 virt_type = {{ nova.virt_type }}
