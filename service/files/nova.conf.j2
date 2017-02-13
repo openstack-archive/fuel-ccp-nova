@@ -68,12 +68,21 @@ html5proxy_port = {{ nova.spicehtml5proxy.port.cont }}
 
 {% if role_name == "nova-compute-ironic" %}
 [ironic]
+auth_type = password
+auth_url = {{ address("keystone", keystone.public_port, with_scheme=True) }}
+project_name = {{ service_account.project }}
+username = {{ ironic.username }}
+password = {{ ironic.password }}
+project_domain_name = {{ service_account.domain }}
+user_domain_name = {{ service_account.domain }}
+
+#(TODO) remove these parameters when mitaka support will be dropped
 #(TODO) remember to update this once discoverd is replaced by inspector
-admin_username = {{ ironic_keystone_user }}
-admin_password = {{ ironic_keystone_password }}
-admin_url = {{ openstack_auth_url }}
-admin_tenant_name = service
-api_endpoint = http://{{ address('ironic-api') }}:{{ ironic_api_port }}/v1
+admin_username = {{ ironic.username }}
+admin_password = {{ ironic.password }}
+admin_url = {{ address("keystone", keystone.public_port, with_scheme=True) }}/v2
+admin_tenant_name = {{ service_account.project }}
+api_endpoint = {{ address('ironic-api', ironic.api_port, with_sceme=True) }}/v1
 {% endif %}
 
 [oslo_concurrency]
@@ -96,11 +105,11 @@ service_metadata_proxy = true
 
 auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}
 auth_type = password
-project_domain_name = default
-user_domain_id = default
-project_name = service
-username = {{ neutron.db.username }}
-password = {{ neutron.db.password }}
+project_domain_name = {{ service_account.domain }}
+user_domain_name = {{ service_account.domain }}
+project_name = {{ service_account.project }}
+username = {{ neutron.username }}
+password = {{ neutron.password }}
 
 [database]
 connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address(service.database) }}/{{ nova.db.name }}
@@ -119,19 +128,7 @@ enabled = true
 # FIXME
 memcache_servers = {{ address('memcached', memcached.port) }}
 
-[keystone_authtoken]
-auth_version = v3
-auth_uri = {{ address('keystone', keystone.public_port, with_scheme=True) }}/v3
-auth_url = {{ address('keystone', keystone.admin_port, with_scheme=True) }}/v3
-auth_type = password
-project_domain_id = default
-user_domain_id = default
-project_name = service
-username = {{ nova.db.username }}
-password = {{ nova.db.password }}
-# Here we need to pass an array of memcached daemons, for now we just use DNS
-#FIXME
-memcached_servers = {{ address('memcached', memcached.port) }}
+{{ keystone_authtoken.keystone_authtoken(nova.username, nova.password) }}
 
 [libvirt]
 virt_type = {{ nova.virt_type }}
