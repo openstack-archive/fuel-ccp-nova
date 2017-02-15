@@ -1,0 +1,17 @@
+actions:
+  - name: nova-db-sync
+    image: nova-base
+    dependencies:
+      - nova-db-create
+    command: nova-manage db sync
+    files:
+      - path: /etc/nova/nova.conf
+        content: nova.conf.j2
+  - name: nova-api-db-sync
+    image: nova-base
+    dependencies:
+      - nova-db-create
+    command: nova-manage api_db sync
+    files:
+      - path: /etc/nova/nova.conf
+        content: nova.conf.j2
