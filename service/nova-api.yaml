@@ -56,7 +56,7 @@ service:
           dependencies:
             - nova-user-create
           type: single
-          command: openstack role add --domain {{ service_account.domain }} --user {{ nova.username }} admin
+          command: openstack role add --project {{ service_account.project }} --user {{ nova.username }} admin
         - name: nova-service-legacy-create
           dependencies:
             - keystone
