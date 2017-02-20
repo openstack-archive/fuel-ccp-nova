@@ -18,10 +18,10 @@ RUN apt-get update \
     && apt-get clean \
     && mkdir -p /etc/ceph /etc/pki \
     && chown -R nova: /etc/ceph /etc/pki \
-    && ln -s /usr/lib/python2.7/dist-packages/rados.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados.so \
+    && ln -s /usr/lib/python2.7/dist-packages/rados.x86_64-linux-gnu.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados.x86_64-linux-gnu.so \
     && ln -s /usr/lib/python2.7/dist-packages/rados-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rados-0.egg-info \
     && ln -s /usr/lib/python2.7/dist-packages/rbd-0.egg-info /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd-0.egg-info \
-    && ln -s /usr/lib/python2.7/dist-packages/rbd.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd.so
+    && ln -s /usr/lib/python2.7/dist-packages/rbd.x86_64-linux-gnu.so /var/lib/microservices/venv/local/lib/python2.7/site-packages/rbd.x86_64-linux-gnu.so
 
 # We have to set libvirt-python version to 2.4.0, to match the libvirt from testing repo.
 RUN sed -i 's/libvirt-python.*/\#libvirt-python==3.0.0/' /var/lib/microservices/venv/constraints.txt && \
