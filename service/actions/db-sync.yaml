@@ -15,3 +15,11 @@ actions:
     files:
       - path: /etc/nova/nova.conf
         content: nova.conf.j2
+  - name: nova-db-online-data-migrations
+    image: nova-base
+    dependencies:
+      - nova-db-create
+    command: nova-manage db online_data_migrations
+    files:
+      - path: /etc/nova/nova.conf
+        content: nova.conf.j2
