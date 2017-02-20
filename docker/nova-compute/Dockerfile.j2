@@ -6,12 +6,12 @@ COPY {{ render('sources.list.debian.j2') }} /etc/apt/sources.list.d/testing.list
 RUN apt-get update \
     && apt-get -y install -t jessie-backports --no-install-recommends \
         qemu-utils \
-    && apt-get -y install libvirt-daemon -t testing --no-install-recommends \
-        libvirt-dev \
-    && apt-get -y install --no-install-recommends \
         ceph-common \
         python-ceph \
         python-rados \
+    && apt-get -y install libvirt-daemon -t testing --no-install-recommends \
+        libvirt-dev \
+    && apt-get -y install --no-install-recommends \
         genisoimage \
         open-iscsi \
         dosfstools \
