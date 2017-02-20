@@ -37,7 +37,7 @@ service:
           - "{{ messaging.dependencies[messaging.backend.notifications] }}"
         files:
           - nova.conf
-          # {% if nova.libvirt.tls_enable %}
+          # {% if nova.libvirt.tls.enabled %}
           - libvirt-cacert
           # {% endif %}
           # {% if nova.ceph.enable %}
@@ -50,7 +50,7 @@ files:
     path: /etc/nova/nova.conf
     content: nova.conf.j2
     perm: "0600"
-  # {% if nova.libvirt.tls_enable %}
+  # {% if nova.libvirt.tls.enabled %}
   libvirt-cacert:
     path: /etc/pki/CA/cacert.pem
     content: libvirt.cacert.j2

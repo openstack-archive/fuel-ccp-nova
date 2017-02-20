@@ -35,7 +35,8 @@ configs:
     virt_type: "kvm"
 
     libvirt:
-      tls_enable: true
+      tls:
+        enabled: true
       libvirt_certificate_authority_certificate: |
         -----BEGIN CERTIFICATE-----
         MIIDRzCCAf+gAwIBAgIEWFKFHjANBgkqhkiG9w0BAQsFADATMREwDwYDVQQDEwht

@@ -37,7 +37,7 @@ service:
         files:
           - libvirtd.conf
           - nova-libvirt-bootstrap.sh
-          # {% if nova.libvirt.tls_enable %}
+          # {% if nova.libvirt.tls.enabled %}
           - libvirt-cacert
           - libvirt-servercert
           - libvirt-serverkey
@@ -88,7 +88,7 @@ files:
     path: /tmp/nova-libvirt-bootstrap.sh
     content: nova-libvirt-bootstrap.sh
     perm: "0755"
-  # {% if nova.libvirt.tls_enable %}
+  # {% if nova.libvirt.tls.enabled %}
   libvirt-cacert:
     path: /etc/pki/CA/cacert.pem
     content: libvirt.cacert.j2

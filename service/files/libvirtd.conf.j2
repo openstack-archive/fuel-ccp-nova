@@ -1,4 +1,4 @@
-{% if nova.libvirt.tls_enable %}
+{% if nova.libvirt.tls.enabled %}
 listen_tcp = 0
 listen_tls = 1
 {% else %}

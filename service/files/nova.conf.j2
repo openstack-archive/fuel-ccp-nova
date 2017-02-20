@@ -132,7 +132,7 @@ memcache_servers = {{ address('memcached', memcached.port) }}
 
 [libvirt]
 virt_type = {{ nova.virt_type }}
-{% if nova.libvirt.tls_enable %}
+{% if nova.libvirt.tls.enabled %}
 # TLS config:
 # 1. NOTE: nova will use default connection_uri to connect to libvirt,
 # e.g. qemu:/// which assumes nova-compute and libvirtd are on the same host.
