@@ -17,11 +17,11 @@ service:
           command: mysql -v -u root -p{{ db.root_password }} -h {{ address(service.database) }} -e 'create database `{{ nova.db.name }}`;
                    create database `{{ nova.db.api_name }}`;
                    create user "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"
-                   {% if percona.tls.enabled %} require ssl {% endif %};
+                   {% if db.tls.enabled %} require ssl {% endif %};
                    grant all privileges on `{{ nova.db.name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"
-                   {% if percona.tls.enabled %} require ssl {% endif %};
+                   {% if db.tls.enabled %} require ssl {% endif %};
                    grant all privileges on `{{ nova.db.api_name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"
-                   {% if percona.tls.enabled %} require ssl {% endif %};'
+                   {% if db.tls.enabled %} require ssl {% endif %};'
           dependencies:
             - {{ service.database }}
           files:
