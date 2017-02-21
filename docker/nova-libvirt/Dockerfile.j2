@@ -5,15 +5,16 @@ COPY {{ render('sources.list.debian.j2') }} /etc/apt/sources.list.d/testing.list
 COPY apt_preferences.debian /etc/apt/preferences
 
 RUN apt-get update \
+    && apt-get install -y --no-install-recommends -t jessie-backports \
+           ceph-common \
+           python-ceph \
+           python-rados \
     && apt-get -y install -t testing --no-install-recommends \
         qemu-kvm \
         qemu-block-extra \
         libvirt-daemon \
         libvirt-bin \
     && apt-get -y install --no-install-recommends \
-        ceph-common \
-        python-ceph \
-        python-rados \
         libvirt-bin \
         dmidecode \
         pm-utils \
