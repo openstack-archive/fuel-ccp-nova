@@ -1,0 +1,10 @@
+Code-Review+1: sryabin <sryabin@mirantis.com>
+Code-Review+2: Sergey Reshetnyak <sreshetniak@mirantis.com>
+Code-Review+2: Andrey Pavlov <apavlov@mirantis.com>
+Workflow+1: Andrey Pavlov <apavlov@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 21 Feb 2017 14:41:37 +0000
+Reviewed-on: https://review.openstack.org/436470
+Project: openstack/fuel-ccp-nova
+Branch: refs/heads/master
