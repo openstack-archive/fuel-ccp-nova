@@ -30,7 +30,7 @@ configs:
         - ServerGroupAffinityFilter
         - SameHostFilter
         - DifferentHostFilter
-    logging_debug: false
+    debug: false
     console: "novnc"
     virt_type: "kvm"
 
