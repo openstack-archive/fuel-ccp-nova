@@ -173,3 +173,4 @@ notify_on_state_change = vm_and_task_state
 {# messaging macros templates #}
 {{ oslo_messaging[messaging.backend.notifications]('notifications_config') }}
 {{ oslo_messaging[messaging.backend.rpc]('rpc_config') }}
+{{ oslo_messaging.rabbit_tls() }}
