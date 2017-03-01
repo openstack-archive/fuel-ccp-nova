@@ -51,6 +51,21 @@ my_ip = {{ network_topology["private"]["address"] }}
 secure_proxy_ssl_header = HTTP_X_FORWARDED_PROTO
 {% endif %}
 
+{% if nova.sriov.enabled %}
+{% if nova.sriov.pci_alias %}
+pci_alias = [
+{%- for alias in nova.sriov.pci_alias -%}
+{%- if not loop.first %},{% endif -%}
+{"name": "{{ alias.name }}", "product_id": "{{ alias.product_id }}", vendor_id": "{{ alias.vendor_id }}"}
+{%- endfor %}]
+{% endif %}
+pci_passthrough_whitelist = [
+{%- for pci_dev in nova.sriov.pci_passthrough_whitelist -%}
+{%- if not loop.first %},{% endif -%}
+{"devname": "{{ pci_dev.devname }}", "physical_network": "{{ pci_dev.physical_network }}"}
+{%- endfor %}]
+{% endif %}
+
 {% if nova.console == 'novnc' %}
 [vnc]
 {% if nova.tls.enabled %}
