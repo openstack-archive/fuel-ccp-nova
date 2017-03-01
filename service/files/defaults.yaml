@@ -38,6 +38,9 @@ configs:
       disk: 0.0
       ram: 0.0
 
+    sriov:
+      enabled: false
+
     ceph:
       enable: false
       pool_name: "vms"
