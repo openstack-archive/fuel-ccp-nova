@@ -181,6 +181,8 @@ configs:
     ceph:
       enable: false
       pool_name: "vms"
+    sriov:
+      enable: false
     bootstrap:
       enable: true
       flavors:
