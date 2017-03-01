@@ -27,6 +27,11 @@ service:
         - name: cgroup
           type: host
           path: /sys/fs/cgroup
+        # {% if nova.sriov.enabled %}
+        - name: dev
+          type: host
+          path: /dev
+        # {% endif %}
       pre:
         - name: nova-libvirt-bootstrap
           command: /tmp/nova-libvirt-bootstrap.sh
