@@ -214,9 +214,23 @@ configs:
           ram: 16384
           disk: 160
           vcpus: 8
+  placement:
+    enabled: true
+    port:
+      cont: 8780
+      ingress: placement
+    wsgi:
+      processes: 4
+      threads: 4
 
 versions:
   novnc_version: "0.6.1"
+
+secret_configs:
+  placement:
+    account:
+      username: placement
+      password: password
 
 sources:
   openstack/nova:

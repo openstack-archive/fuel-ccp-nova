@@ -1,0 +1,59 @@
+dsl_version: 0.4.0
+service:
+  name: placement-api
+  ports:
+    - {{ placement.port }}
+  annotations:
+    service:
+      prometheus.io/probe: "true"
+  containers:
+    - name: placement-api
+      image: placement-api
+      pre:
+        - name: placement-user-create
+          type: single
+          command: openstack user create --domain {{ service_account.domain }} --password {{ placement.account.password }} {{ placement.account.username }}
+          dependencies:
+            - keystone-create-domain
+        - name: placement-role-add
+          dependencies:
+            - keystone-create-project
+            - placement-user-create
+          type: single
+          command: openstack role add --project {{ service_account.project }} --user {{ placement.account.username }} admin
+        - name: placement-service-create
+          dependencies:
+            - keystone
+          type: single
+          command: openstack service create --name nova --description "Placement Service" placement
+        - name: placement-public-endpoint-create
+          dependencies:
+            - placement-service-create
+          type: single
+          command: openstack endpoint create --region RegionOne placement public {{ address('placement-api', placement.port, external=True, with_scheme=True) }}/placement
+        - name: placement-internal-endpoint-create
+          dependencies:
+            - placement-service-create
+          type: single
+          command: openstack endpoint create --region RegionOne placement internal {{ address('placement-api', placement.port, with_scheme=True) }}/placement
+        - name: placement-admin-endpoint-create
+          dependencies:
+            - placement-service-create
+          type: single
+          command: openstack endpoint create --region RegionOne placement admin {{ address('placement-api', placement.port, with_scheme=True) }}/placement
+
+      daemon:
+        command: daemon.sh
+        files:
+          - nova.conf
+          - apache-placement-api.conf
+
+files:
+  nova.conf:
+    path: /etc/nova/nova.conf
+    content: nova.conf.j2
+    perm: "0644"
+  apache-placement-api.conf:
+    path: /etc/apache2/conf-enabled/nova-placement-api.conf
+    content: apache-placement-api.conf.j2
+    perm: "0600"
