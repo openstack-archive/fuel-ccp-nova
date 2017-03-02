@@ -1,0 +1,26 @@
+Listen {{ placement.port.cont }}
+<VirtualHost *:{{ placement.port.cont }}>
+    WSGIDaemonProcess placement-api processes={{ placement.wsgi.processes }} threads={{ placement.wsgi.threads }} user=nova display-name=%{GROUP} python-path=/var/lib/microservices/venv/lib/python2.7/site-packages
+    WSGIProcessGroup placement-api
+    WSGIScriptAlias / /var/lib/microservices/venv/bin/nova-placement-api
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIPassAuthorization On
+    <IfVersion >= 2.4>
+      ErrorLogFormat "%M"
+    </IfVersion>
+    ErrorLog /dev/stderr
+    <Directory /var/lib/microservices/venv/bin>
+        Order allow,deny
+        Allow from all
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+Alias /placement /var/lib/microservices/venv/bin/nova-placement-api
+<Location /placement>
+    SetHandler wsgi-script
+    Options +ExecCGI
+    WSGIProcessGroup placement-api
+    WSGIApplicationGroup %{GLOBAL}
+    WSGIPassAuthorization On
+</Location>

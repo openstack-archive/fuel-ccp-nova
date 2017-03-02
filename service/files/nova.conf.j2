@@ -196,6 +196,20 @@ driver = {{ searchlight.notification_driver }}
 notify_on_state_change = vm_and_task_state
 {% endif %}
 
+{% if placement.enabled %}
+[placement]
+auth_uri = {{ address("keystone", keystone.public_port, with_scheme=True) }}
+auth_url = {{ address("keystone", keystone.admin_port, with_scheme=True) }}
+auth_type = password
+project_domain_name = {{ service_account.domain }}
+user_domain_name = {{ service_account.domain }}
+project_name = {{ service_account.project }}
+username = {{ placement.account.username }}
+password = {{ placement.account.password }}
+memcached_servers = {{ address("memcached", memcached.port) }}
+os_region_name = RegionOne
+{% endif %}
+
 {# messaging macros templates #}
 {{ oslo_messaging[messaging.backend.notifications]('notifications_config') }}
 {{ oslo_messaging[messaging.backend.rpc]('rpc_config') }}
