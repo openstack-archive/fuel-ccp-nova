@@ -1,5 +1,10 @@
+{% if placement.tls.enabled %}
+Listen 127.0.0.1:{{ placement.port.cont }}
+<VirtualHost 127.0.0.1:{{ placement.port.cont }}>
+{% else %}
 Listen {{ placement.port.cont }}
 <VirtualHost *:{{ placement.port.cont }}>
+{% endif %}
     WSGIDaemonProcess placement-api processes={{ placement.wsgi.processes }} threads={{ placement.wsgi.threads }} user=nova display-name=%{GROUP} python-path=/var/lib/microservices/venv/lib/python2.7/site-packages
     WSGIProcessGroup placement-api
     WSGIScriptAlias / /var/lib/microservices/venv/bin/nova-placement-api
