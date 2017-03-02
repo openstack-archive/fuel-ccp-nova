@@ -9,3 +9,7 @@ upstream nova_api {
 upstream nova_metadata {
    server 127.0.0.1:{{ nova.metadata.port.cont }};
 }
+
+upstream nova_placement_api {
+   server 127.0.0.1:{{ placement.port.cont }};
+}

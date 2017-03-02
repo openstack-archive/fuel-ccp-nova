@@ -219,6 +219,8 @@ configs:
     port:
       cont: 8780
       ingress: placement
+    tls:
+      enabled: true
     wsgi:
       processes: 4
       threads: 4
