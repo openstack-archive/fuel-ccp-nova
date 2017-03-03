@@ -132,13 +132,13 @@ username = {{ neutron.username }}
 password = {{ neutron.password }}
 
 [database]
-connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address(service.database) }}/{{ nova.db.name }}{% if db.tls.enabled %}?ssl_ca=/opt/ccp/etc/tls/ca.pem{% endif %}
+connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address("database") }}/{{ nova.db.name }}{% if db.tls.enabled %}?ssl_ca=/opt/ccp/etc/tls/ca.pem{% endif %}
 max_pool_size = 50
 max_overflow = 1000
 max_retries = -1
 
 [api_database]
-connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address(service.database) }}/{{ nova.db.api_name }}{% if db.tls.enabled %}?ssl_ca=/opt/ccp/etc/tls/ca.pem{% endif %}
+connection = mysql+pymysql://{{ nova.db.username }}:{{ nova.db.password }}@{{ address("database") }}/{{ nova.db.api_name }}{% if db.tls.enabled %}?ssl_ca=/opt/ccp/etc/tls/ca.pem{% endif %}
 max_retries = -1
 
 [cache]
