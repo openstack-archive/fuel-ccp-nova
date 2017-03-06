@@ -2,11 +2,6 @@ configs:
   nova:
     tls:
       enabled: true
-    db:
-      password: password
-      name: nova
-      api_name: nova-api
-      username: nova
     api_port:
       cont: 8774
       ingress: compute
@@ -17,8 +12,6 @@ configs:
       port:
         cont: 8775
       secret: "password"
-    username: nova
-    password: password
     scheduler:
       enabled_filters:
         - RetryFilter
@@ -39,6 +32,61 @@ configs:
     libvirt:
       tls:
         enabled: true
+
+    allocation_ratio:
+      cpu: 0.0
+      disk: 0.0
+      ram: 0.0
+
+    ceph:
+      enable: false
+      pool_name: "vms"
+    bootstrap:
+      enable: true
+      flavors:
+        - name: m1.test
+          id: 0
+          ram: 128
+          disk: 1
+          vcpus: 1
+        - name: m1.tiny
+          id: 1
+          ram: 512
+          disk: 1
+          vcpus: 1
+        - name: m1.small
+          id: 2
+          ram: 2048
+          disk: 20
+          vcpus: 1
+        - name: m1.medium
+          id: 3
+          ram: 4096
+          disk: 40
+          vcpus: 2
+        - name: m1.large
+          id: 4
+          ram: 8192
+          disk: 80
+          vcpus: 4
+        - name: m1.xlarge
+          id: 5
+          ram: 16384
+          disk: 160
+          vcpus: 8
+
+secret_configs:
+  nova:
+    db:
+      password: password
+      name: nova
+      api_name: nova-api
+      username: nova
+
+    username: nova
+    password: password
+
+    libvirt:
       libvirt_certificate_authority_certificate: |
         -----BEGIN CERTIFICATE-----
         MIIDRzCCAf+gAwIBAgIEWFKFHjANBgkqhkiG9w0BAQsFADATMREwDwYDVQQDEwht
@@ -173,47 +221,6 @@ configs:
         v4i7e8F1kKNh2/q1WBrY+g==
         -----END RSA PRIVATE KEY-----
 
-    allocation_ratio:
-      cpu: 0.0
-      disk: 0.0
-      ram: 0.0
-
-    ceph:
-      enable: false
-      pool_name: "vms"
-    bootstrap:
-      enable: true
-      flavors:
-        - name: m1.test
-          id: 0
-          ram: 128
-          disk: 1
-          vcpus: 1
-        - name: m1.tiny
-          id: 1
-          ram: 512
-          disk: 1
-          vcpus: 1
-        - name: m1.small
-          id: 2
-          ram: 2048
-          disk: 20
-          vcpus: 1
-        - name: m1.medium
-          id: 3
-          ram: 4096
-          disk: 40
-          vcpus: 2
-        - name: m1.large
-          id: 4
-          ram: 8192
-          disk: 80
-          vcpus: 4
-        - name: m1.xlarge
-          id: 5
-          ram: 16384
-          disk: 160
-          vcpus: 8
   placement:
     enabled: true
     port:
@@ -227,12 +234,6 @@ configs:
 
 versions:
   novnc_version: "0.6.1"
-
-secret_configs:
-  placement:
-    account:
-      username: placement
-      password: password
 
 sources:
   openstack/nova:
