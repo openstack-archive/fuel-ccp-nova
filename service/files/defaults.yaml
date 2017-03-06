@@ -2,11 +2,6 @@ configs:
   nova:
     tls:
       enabled: true
-    db:
-      password: password
-      name: nova
-      api_name: nova-api
-      username: nova
     api_port:
       cont: 8774
       ingress: compute
@@ -17,8 +12,6 @@ configs:
       port:
         cont: 8775
       secret: "password"
-    username: nova
-    password: password
     scheduler:
       enabled_filters:
         - RetryFilter
@@ -39,6 +32,61 @@ configs:
     libvirt:
       tls:
         enabled: true
+
+    allocation_ratio:
+      cpu: 0.0
+      disk: 0.0
+      ram: 0.0
+
+    ceph:
+      enable: false
+      pool_name: "vms"
+    bootstrap:
+      enable: true
+      flavors:
+        - name: m1.test
+          id: 0
+          ram: 128
+          disk: 1
+          vcpus: 1
+        - name: m1.tiny
+          id: 1
+          ram: 512
+          disk: 1
+          vcpus: 1
+        - name: m1.small
+          id: 2
+          ram: 2048
+          disk: 20
+          vcpus: 1
+        - name: m1.medium
+          id: 3
+          ram: 4096
+          disk: 40
+          vcpus: 2
+        - name: m1.large
+          id: 4
+          ram: 8192
+          disk: 80
+          vcpus: 4
+        - name: m1.xlarge
+          id: 5
+          ram: 16384
+          disk: 160
+          vcpus: 8
+
+secret_configs:
+  nova:
+    db:
+      password: password
+      name: nova
+      api_name: nova-api
+      username: nova
+
+    username: nova
+    password: password
+
+    libvirt:
       libvirt_certificate_authority_certificate: |
         -----BEGIN CERTIFICATE-----
         MIIDRzCCAf+gAwIBAgIEWFKFHjANBgkqhkiG9w0BAQsFADATMREwDwYDVQQDEwht
@@ -60,7 +108,7 @@ configs:
         YsxFjEt0BZr+wbgcjLaEqnorhMy8NRZUz/eJFJQ9rH26SX1PG7pYuW6sgo8wDvS+
         ZEsiknVIvGgVe//R1cHSiZ9CAOIKu3pKNX+z
         -----END CERTIFICATE-----
-      libvirt_server_certificate: |
+      bvirt_server_certificate: |
         -----BEGIN CERTIFICATE-----
         MIIDlDCCAkygAwIBAgIEWFKFHjANBgkqhkiG9w0BAQsFADATMREwDwYDVQQDEwht
         aXJhbnRpczAeFw0xNjEyMTUxMTU3MThaFw0yNjEyMTMxMTU3MThaMC0xETAPBgNV
@@ -82,7 +130,7 @@ configs:
         fQWdb4u4T94Jsv6B3mtbGhbWoDKspWAo8ASZeSTeom4RIkYn42Qrvam6aumRyjfz
         VrydJPO5NPYfCETGUtEV3Sb0/HRnkFg00UaHJaISpBNFSUeW5MUj3gtM00l1z9Cc
         JP/10vBq2DM=
-        -----END CERTIFICATE-----
+        -----END CERTIFICATE----- 
       libvirt_server_key: |
         -----BEGIN RSA PRIVATE KEY-----
         MIIFewIBAAKCATEAwvMTCcMHp5zjRMA9mwDLLwgjRGkGGhC8Ew8SyusAqiKlyIB0
@@ -172,48 +220,6 @@ configs:
         psqMehCVjWiMVn1BdSS+W93GFFb2NJ5xQQ2k7QgPtD8DBaEVd9arvimBV9j1C5qP
         v4i7e8F1kKNh2/q1WBrY+g==
         -----END RSA PRIVATE KEY-----
-
-    allocation_ratio:
-      cpu: 0.0
-      disk: 0.0
-      ram: 0.0
-
-    ceph:
-      enable: false
-      pool_name: "vms"
-    bootstrap:
-      enable: true
-      flavors:
-        - name: m1.test
-          id: 0
-          ram: 128
-          disk: 1
-          vcpus: 1
-        - name: m1.tiny
-          id: 1
-          ram: 512
-          disk: 1
-          vcpus: 1
-        - name: m1.small
-          id: 2
-          ram: 2048
-          disk: 20
-          vcpus: 1
-        - name: m1.medium
-          id: 3
-          ram: 4096
-          disk: 40
-          vcpus: 2
-        - name: m1.large
-          id: 4
-          ram: 8192
-          disk: 80
-          vcpus: 4
-        - name: m1.xlarge
-          id: 5
-          ram: 16384
-          disk: 160
-          vcpus: 8
 
 versions:
   novnc_version: "0.6.1"
