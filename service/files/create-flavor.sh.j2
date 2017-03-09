@@ -20,5 +20,12 @@ export OS_AUTH_URL="{{ address('keystone', keystone.admin_port, with_scheme=True
 export OS_CACERT="/opt/ccp/etc/tls/ca.pem"
 {% endif %}
 
+flavor_params="--id $id"
+flavor_params+=" --ram $ram"
+flavor_params+=" --disk $disk"
+flavor_params+=" --vcpus $vcpus"
+{% if nova.libvirt.hugepages %}
+flavor_params+=" --property hw:mem_page_size=large"
+{% endif %}
 openstack flavor show $name || openstack --os-region-name=RegionOne \
-    flavor create --id $id --ram $ram --disk $disk --vcpus $vcpus $name
+    flavor create $flavor_params $name

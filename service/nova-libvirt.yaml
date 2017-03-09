@@ -32,6 +32,11 @@ service:
           type: host
           path: /dev
         # {% endif %}
+        # {% if nova.libvirt.hugepages %}
+        - name: hugepages
+          type: host
+          path: /dev/hugepages
+        # {% endif %}
       pre:
         - name: nova-libvirt-bootstrap
           command: /tmp/nova-libvirt-bootstrap.sh
