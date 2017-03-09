@@ -39,6 +39,7 @@ configs:
     libvirt:
       tls:
         enabled: true
+      hugepages: false
       libvirt_certificate_authority_certificate: |
         -----BEGIN CERTIFICATE-----
         MIIDRzCCAf+gAwIBAgIEWFKFHjANBgkqhkiG9w0BAQsFADATMREwDwYDVQQDEwht
