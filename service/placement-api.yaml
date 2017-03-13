@@ -94,5 +94,5 @@ files:
   ca-cert:
     path: /opt/ccp/etc/tls/ca.pem
     content: ca-cert.pem.j2
-    perm: "0400"
+    perm: "0644"
   # {% endif %}
