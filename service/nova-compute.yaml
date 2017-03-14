@@ -44,6 +44,9 @@ service:
           - ceph-conf
           - nova-ceph-key
           # {% endif %}
+          # {% if keystone.tls.enabled %}
+          - ca-cert
+          # {% endif %}
 
 files:
   nova.conf:
@@ -63,4 +66,10 @@ files:
   nova-ceph-key:
     path: /etc/ceph/ceph.client.{{ cinder.ceph.username }}.keyring
     content: ceph.client.cinder.keyring.j2
+  # {% endif %}
+  # {% if keystone.tls.enabled %}
+  ca-cert:
+    path: /opt/ccp/etc/tls/ca.pem
+    content: ca-cert.pem.j2
+    perm: "0644"
   # {% endif %}
