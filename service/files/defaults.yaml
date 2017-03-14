@@ -30,6 +30,7 @@ configs:
     virt_type: "kvm"
 
     libvirt:
+      hugepages: false
       tls:
         enabled: true
 
