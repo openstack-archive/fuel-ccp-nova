@@ -213,8 +213,7 @@ notify_on_state_change = vm_and_task_state
 
 {% if placement.enabled %}
 [placement]
-auth_uri = {{ address("keystone", keystone.public_port, with_scheme=True) }}
-auth_url = {{ address("keystone", keystone.admin_port, with_scheme=True) }}
+auth_url = {{ address("keystone", keystone.admin_port, with_scheme=True) }}/v3
 auth_type = password
 project_domain_name = {{ service_account.domain }}
 user_domain_name = {{ service_account.domain }}
