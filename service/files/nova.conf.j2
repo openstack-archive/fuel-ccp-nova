@@ -105,7 +105,7 @@ admin_username = {{ ironic.username }}
 admin_password = {{ ironic.password }}
 admin_url = {{ address("keystone", keystone.public_port, with_scheme=True) }}/v2
 admin_tenant_name = {{ service_account.project }}
-api_endpoint = {{ address('ironic-api', ironic.api_port, with_sceme=True) }}/v1
+api_endpoint = {{ address('ironic-api', ironic.api_port, with_scheme=True) }}/v1
 {% endif %}
 
 [oslo_concurrency]
