@@ -27,6 +27,11 @@ configs:
         - DifferentHostFilter
     debug: false
     console: "novnc"
+
+    cells_v2:
+      enabled: false
+      cell_name: cell0
+
     virt_type: "kvm"
 
     libvirt:

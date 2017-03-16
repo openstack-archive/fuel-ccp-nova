@@ -16,12 +16,15 @@ service:
           type: single
           command: mysql -v -u root -p{{ db.root_password }} -h {{ address("database") }} -e 'create database `{{ nova.db.name }}`;
                    create database `{{ nova.db.api_name }}`;
+                   {% if nova.cells_v2.enabled %} create database `nova_{{ nova.cells_v2.cell_name }}`; {% endif -%}
                    create user "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"
                    {% if db.tls.enabled %} require ssl {% endif %};
                    grant all privileges on `{{ nova.db.name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"
                    {% if db.tls.enabled %} require ssl {% endif %};
                    grant all privileges on `{{ nova.db.api_name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"
-                   {% if db.tls.enabled %} require ssl {% endif %};'
+                   {% if db.tls.enabled %} require ssl {% endif %};
+                   {% if nova.cells_v2.enabled %} grant all privileges on `nova_{{ nova.cells_v2.cell_name }}`.* to "{{ nova.db.username }}"@"%" identified by "{{ nova.db.password }}"
+                   {% if db.tls.enabled %} require ssl {% endif %}; {% endif %}'
           dependencies:
             - database
           files:
@@ -37,7 +40,7 @@ service:
           type: single
           command: nova-manage api_db sync
           dependencies:
-            - nova-db-sync
+            - nova-db-create
           files:
             - nova.conf
         - name: nova-db-migrations
@@ -47,6 +50,16 @@ service:
             - nova-api-db-sync
           files:
             - nova.conf
+        # {% if nova.cells_v2.enabled %}
+        - name: nova-cell-create
+          type: single
+          dependencies:
+            - nova-api-db-sync
+            - nova-db-sync
+          command: nova-manage cell_v2 create_cell --name {{ nova.cells_v2.cell_name }}
+          files:
+            - nova.conf
+        # {% endif %}
         - name: nova-user-create
           type: single
           command: openstack user create --domain {{ service_account.domain }} --password {{ nova.password }} {{ nova.username }}
