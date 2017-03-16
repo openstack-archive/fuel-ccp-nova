@@ -47,6 +47,11 @@ service:
           # {% if keystone.tls.enabled %}
           - ca-cert
           # {% endif %}
+      # {% if nova.cells_v2.enabled %}
+      post:
+        - name: add-host-to-cell
+          command: nova-manage cell_v2 map_cell_and_hosts
+      # {% endif %}
 
 files:
   nova.conf:
