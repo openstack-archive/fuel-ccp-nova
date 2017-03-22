@@ -15,6 +15,9 @@ service:
         files:
           - nova.conf
           - nova-ironic.conf
+          # {% if keystone.tls.enabled %}
+          - ca-cert
+          # {% endif %}
         dependencies:
           - nova-db-migrations
           - ironic-user-create
@@ -27,3 +30,9 @@ files:
     path: /etc/nova/nova-ironic.conf
     content: nova-ironic.conf.j2
     perm: "0600"
+  # {% if keystone.tls.enabled %}
+  ca-cert:
+    path: /opt/ccp/etc/tls/ca.pem
+    content: ca-cert.pem.j2
+    perm: "0644"
+  # {% endif %}
