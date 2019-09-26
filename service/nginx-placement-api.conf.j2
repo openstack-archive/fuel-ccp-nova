@@ -1,9 +1,0 @@
-server {
-	listen {{ network_topology["private"]["address"] }}:{{ placement.port.cont }} ssl;
-	include common/ssl.conf;
-
-    location / {
-        proxy_pass http://nova_placement_api;
-        include common/proxy-headers.conf;
-    }
-}

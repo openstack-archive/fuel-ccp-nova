@@ -1,4 +1,0 @@
-Package: qemu-kvm
-Pin: release a=testing
-Pin: version 2.8+dfsg-1
-Pin-Priority: 500
